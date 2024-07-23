@@ -36,29 +36,29 @@ void ft_echo(t_params *par, int fd)
     }
 }
 
-// void ft_cd(t_params *par)
-// {
-//     char *env;
+void ft_cd(t_params *par)
+{
+    char *env;
 
-//     if(par->cmd[1] == NULL || ft_strcmp(par->cmd[1], ".") == 0)
-//         free_and_exit_succes();
-//     else if(ft_strcmp(par->cmd[1], "-") == 0)
-//     {
-//         env = getenv("OLDPWD");
+    if(par->cmd[1] == NULL || ft_strcmp(par->cmd[1], ".") == 0)
+        free_and_exit_succes();
+    else if(ft_strcmp(par->cmd[1], "-") == 0)
+    {
+        env = getenv("OLDPWD");
         
-//         if(chdir(env) == -1)
-//             //!perro_ end exit failure(ex : if OLDPWD is unset)
+        if(chdir(env) == -1)
+            //!perro_ end exit failure(ex : if OLDPWD is unset)
         
-//     }
-//     else if(ft_strcmp(par->cmd[1], ".." == 0))
-//     {
+    }
+    else if(ft_strcmp(par->cmd[1], ".." == 0))
+    {
 
-//     }
-//     else if(ft_strcmp())
-//     {
+    }
+    else if(ft_strcmp())
+    {
 
-//     }
-// }
+    }
+}
 
 // void ft_pwd(t_params *par)
 // {
