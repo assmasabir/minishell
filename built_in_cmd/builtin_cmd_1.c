@@ -36,7 +36,7 @@ void ft_echo(t_params *par, int fd)
     }
 }
 
-void ft_cd(t_params *par)
+void ft_cd(t_params *par, int output)
 {
     char *env;
 
@@ -45,7 +45,7 @@ void ft_cd(t_params *par)
     else if(ft_strcmp(par->cmd[1], "-") == 0)
     {
         env = getenv("OLDPWD");
-        
+        ft_putstr(env, output);
         if(chdir(env) == -1)
             //!perro_ end exit failure(ex : if OLDPWD is unset)
         
@@ -70,16 +70,16 @@ void ft_cd(t_params *par)
 
 // }
 
-int main(int argc, char **argv)
-{
-    (void)argc;
-    (void)argv;
-    int i;
+// int main(int argc, char **argv)
+// {
+//     (void)argc;
+//     (void)argv;
+//     int i;
 
-    i = 0;
-    while(export[i])
-    {
-        printf("%s\n", export[i]);
-        i++;
-    }
-}
+//     i = 0;
+//     while(export[i])
+//     {
+//         printf("%s\n", export[i]);
+//         i++;
+//     }
+// }

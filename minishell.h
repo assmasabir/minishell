@@ -35,7 +35,6 @@ typedef struct Exprot
     struct Export *next;
 } t_export;
 
-//executable utils
 int list_size(t_params *param);
 int ft_strcmp(char *str1, char *str2);
 int ft_strncmp(char *str1, char *str2, int n);
@@ -43,12 +42,18 @@ char **ft_split(char *str);
 int ft_strch(char *str, char c);
 
 
-//built_in utils
+
 void ft_putstr(char *str, int fd);
 int ft_strlen(char *str);
 char *uppercase(char *name);
 char *ft_join(char *str1, char *str2);
 char *ft_strdup(char *str);
 void free_matrix(char **str);
-char *modify_var(char *var, char *new_var, int append);
+void *modify_existing_var(char *str);
+int check_if_append(char **new_var);
+int check_if_add_change_append(char *new_var);
+int check_if_valid(char *new_var);
+void add_var_if_not_exist(char *new_var, int size, int added);
+char *var_with_quotes(char *new_var);
+char *ft_join_var(char *str1, char *str2);
 #endif
