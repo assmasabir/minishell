@@ -51,7 +51,7 @@ char *ft_strdup(char *str);
 void free_matrix(char **str);
 void *modify_existing_var(t_params *par, char *str);
 int check_if_append(char *new_var);
-int check_if_add_change_append(t_params *par,char *new_var, int max);
+int check_if_add_change_append(t_params *par,char *new_var, int max, int *count);
 int check_if_valid(char *new_var);
 char *var_with_quotes(char *new_var);
 char *ft_join_var(char *str1, char *str2);
@@ -65,4 +65,5 @@ int size_env(char **env);
 void loop(t_params *par, int size_env, char **export, char **cpy_env);
 char **sort_env(t_params *par, char **export);
 void add_var_if_not_exist(t_params *par, char *new_var, int size, int added);
+int check_if_var_reapeated(t_params *par, char *new_var);
 #endif

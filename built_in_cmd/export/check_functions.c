@@ -1,4 +1,4 @@
-#include "/home/elite/Desktop/minishell/minishell.h"
+ #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 //0 es decir append
 int check_if_append(char *new_var)
@@ -18,7 +18,7 @@ int check_if_append(char *new_var)
 //0 es decir add
 //1 es decir change
 //2 es decir append
-int check_if_add_change_append(t_params *par, char *new_var, int max)
+int check_if_add_change_append(t_params *par, char *new_var, int max, int *count)
 {
     int i;
     int check;
@@ -27,15 +27,17 @@ int check_if_add_change_append(t_params *par, char *new_var, int max)
 
     i = 0;
     check = 0;
+    keyvar = return_key(new_var);
+    printf("hesbi meaya\n");
     while(i < max-1)
     {
         if(new_var[0] == '$')
             return(-1);
         keyenv = return_key(par->myenv[i]);
-        keyvar = return_key(new_var);
-        // printf("%s\n", par->myenv[i]);
+        // printf("keyenv%s\n ")
+        // printf("i am env %s\n", keyenv);
         // printf("%s'n", keyenv);
-        // printf("%s'n", keyvar);
+        // printf("i am var %s\n", keyvar);
         if(ft_strcmp(keyenv, keyvar) == 0)
         {
             printf("hhhh\n");
@@ -43,15 +45,23 @@ int check_if_add_change_append(t_params *par, char *new_var, int max)
             break;
         }
         i++;
-    }
     free(keyenv);
+    }
     free(keyvar);
     if(check == 0)
         return (0);
     if(check == 1 && check_if_append(new_var) != 0)
+    {
+        if(check_if_var_reapeated(par, new_var) == 1)
+            (*count)++;
         return(1);
+    }
     if(check == 1 && check_if_append(new_var) == 0)
+    {
+        if(check_if_var_reapeated(par, new_var) == 1)
+            (*count)++;
         return(2);
+    }
     return(-1);
 }
 

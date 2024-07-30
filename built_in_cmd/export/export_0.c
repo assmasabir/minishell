@@ -1,6 +1,6 @@
-#include "/home/elite/Desktop/minishell/minishell.h"
+ #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
-void ft_export(t_params *par, int foutput)
+int  ft_export(t_params *par, int foutput)
 {
     int i;
     char **export;
@@ -13,6 +13,7 @@ void ft_export(t_params *par, int foutput)
     if(par->cmd[1] == NULL || par->cmd[1][0] == '#' || (par->cmd[1][0] == '$' && par->cmd[2]==NULL))
     {
         export = sort_env(par, par->myenv);
+        printf("fiiirst\n");
         while(export[i])
         {
             ft_putstr(export[i], foutput);
@@ -25,6 +26,7 @@ void ft_export(t_params *par, int foutput)
     {
        handle_variables(par, foutput);
     }
+    return 0;
 }
 
 char **create_copy(char **str, int *size)
@@ -99,7 +101,6 @@ char **sort_env(t_params *par, char **export)
 
     size_env = 0;
     cpy_env = create_copy(par->myenv, &size_env);
-    // free_matrix(export);
     export = malloc(sizeof(char *)*(size_env+1));
     loop(par, size_env, export, cpy_env);
     export[size_env]=NULL;
@@ -116,7 +117,7 @@ int main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
     par = malloc(sizeof(t_params));
-    par->cmd = malloc(6 * sizeof(char *));
+    par->cmd = malloc(7 * sizeof(char *));
     int size = size_env(env);
     par->myenv=create_copy(env, &size);
     if (par->cmd == NULL) {
@@ -124,21 +125,19 @@ int main(int argc, char **argv, char **env)
     }
     par->cmd[0] = ft_strdup("export");
     par->cmd[1] = ft_strdup("ngurp");
-    par->cmd[2] = ft_strdup("uuuu+=hoooooiiii");
+    par->cmd[2] = ft_strdup("uuuu=hoooooiiii");
     par->cmd[3] = ft_strdup("uuuu=aaaa");
-    par->cmd[4] = ft_strdup("uuuu=anew");  
-    par->cmd[5] = NULL;
-    ft_export(par, 1);
-    while(par->myenv[i])
-    {
-        printf("%s\n", par->myenv[i]);
-        i++;
-    }
-    // printf("key %s\n", return_key(par->cmd[2]));
-    //    printf("key %s\n", return_key(par->cmd[3]));
-
-    // free_matrix(par->myenv);
-    i = 0;
+    par->cmd[4] = ft_strdup("uuuu+=lalala");
+    par->cmd[5] = ft_strdup("VSCODE_INJECTION=miaw");
+    par->cmd[6] = NULL;
+    int fhgd = ft_export(par, 1);
+    (void)fhgd;
+    // while(par->myenv[i])
+    // {
+    //     printf("%s\n", par->myenv[i]);
+    //     i++;
+    // }
+    // i = 0;
     while(par->cmd[i])
     {
         free(par->cmd[i]);

@@ -1,4 +1,4 @@
-#include "/home/elite/Desktop/minishell/minishell.h"
+ #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 // void *modify_var(char *new_var, int check)
 // {
@@ -91,8 +91,10 @@ char **handle_variables(t_params *par, int output)
     int check;
     int count_added;
     int j;
+    int duplicated_keys;
     
     i = 0;
+    duplicated_keys = 0;
     count_added = 0;
     size = size_env(par->myenv);
     nb = count_variables(par, size);
@@ -113,12 +115,21 @@ char **handle_variables(t_params *par, int output)
     //     v++;
     //     printf("i am v %d\n",v);
     // }
-
-    while(i < (nb+size))
+    int max = nb+size;
+    // int b = 1;
+    // while(par->cmd[b])
+    // {
+    //     printf("cmd %s\n", par->cmd[b]);
+    //     b++;
+    // }
+    free(par);
+    printf("cmd %s\n", par->cmd[i]);
+    while(i < max)
     {
+        printf("test\n");
         if(check_if_valid(par->cmd[j]) == 0)//valid
         {
-            check = check_if_add_change_append(par, par->cmd[j], i);
+            check = check_if_add_change_append(par, par->cmd[j], i+1, &duplicated_keys);
             printf("i am check%d\n", check);
             if(check == 0)//add
             {
@@ -127,9 +138,13 @@ char **handle_variables(t_params *par, int output)
                 count_added++;
             }
             else if(check == 1)//change
+            {
                 change_or_append_var_value(par, par->cmd[j], check);
+            }
             else if(check == 2)//append
+            {
                 change_or_append_var_value(par, par->cmd[j], check);
+            }
         }
         else if(check_if_valid(par->cmd[j]) == -1)//other like * or = ...
         {
@@ -140,12 +155,14 @@ char **handle_variables(t_params *par, int output)
         // else if(check_if_valid(par->cmd[i]) == -2)//$
         //     i++;
         else if(check_if_valid(par->cmd[j]) == -3)//#
-            exit(0);
+            exit(127);
         // free_and_exit_without_printing_error();
         if(par->cmd[j][0] != '$')
             i++;
         j++;
     }
+    if(duplicated_keys != 0)
+        i = i - duplicated_keys;
     par->myenv[i] = NULL;
     // free_matrix(copy);
     return(par->myenv); 
