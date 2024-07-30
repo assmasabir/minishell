@@ -53,8 +53,3 @@ char *ft_join_var(char *str1, char *str2)
     to_join[i+1] = '\0';
     return(to_join);
 }
-
-int main()
-{
-    printf("%s\n", ft_join_var("assma=\"sab\"", "ir"));
-}

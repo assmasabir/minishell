@@ -9,7 +9,7 @@ int list_size(t_params *param)
     while(param)
     {
         i++;
-        param->next;
+        param  = param->next;
     }
     return (i);
 }
@@ -55,7 +55,8 @@ char **ft_split(char *str)
 
     i = 0;
     size = 0;
-    to_return = malloc(sizeof(char*)*(count_paths(str)+1));
+    nb_paths = count_paths(str);
+    to_return = malloc(sizeof(char*)*(nb_paths+1));
     while(i < nb_paths)
     {
         size = 0;
@@ -69,7 +70,7 @@ char **ft_split(char *str)
             n++;
             str++;
         }
-        to_return[i][n] = '/0';
+        to_return[i][n] = '\0';
         i++;
     }
     to_return[i] = NULL;

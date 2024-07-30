@@ -1,33 +1,32 @@
-#include <../../minishell.h>
+#include "/home/elite/Desktop/minishell/minishell.h"
 
-void *modify_var(char *new_var, int check)
+// void *modify_var(char *new_var, int check)
+// {
+//     int i;
+//     char *key_var;
+
+//     i = 0;
+//     key_var = return_key(new_var);
+//     while(par->myenv[i])
+//     {
+//         if(ft_strcmp(return_key(par->myenv[i]),key_var) == 0)
+//             break;
+//         i++;
+//     }
+//     par->myenv[i]=modify_var(par->myenv[i], str, 0);
+// }
+
+void change_or_append_var_value(t_params* par,char *new_var, int check)
 {
     int i;
-    char *key_var;
-
-    i = 0;
-    key_var = return_key(new_var);
-    while(environ[i])
-    {
-        if(ft_strcmp(return_key(environ[i]),key_var) == 0)
-            break;
-        i++;
-    }
-    environ[i]=modify_var(environ[i], str, 0);
-}
-
-void change_or_append_var_value(char *new_var, int check)
-{
-    int i;
-    char *value;
     char *temp;
     char *key_var;
 
     i = 0;
     key_var = return_key(new_var);
-    while(environ[i])
+    while(par->myenv[i])
     {
-        if(ft_strcmp(return_key(environ[i]),key_var) == 0)
+        if(ft_strcmp(return_key(par->myenv[i]),key_var) == 0)
             break;
         i++;
     }
@@ -35,19 +34,22 @@ void change_or_append_var_value(char *new_var, int check)
     {
         if(ft_strch(new_var, '=') == -1)
         {
-            free(environ[i]);
-            environ[i] = ft_strdup(new_var);
+            // printf("ddijfidjf\n");
+            free(par->myenv[i]);
+            par->myenv[i] = ft_strdup(new_var);
         }
         else
         {
-            free(environ[i]);
-            environ[i] = var_with_quotes(new_var);
+            printf("dfhdufho %s\n", par->myenv[i]);
+            free(par->myenv[i]);
+            par->myenv[i] = var_with_quotes(new_var);
         }
     }
     else if(check == 2) //append
     {
-        temp = environ[i];
-        environ[i] = ft_join_var(environ[i], to_append(new_var));
+        temp = par->myenv[i];
+        printf("top %s\n", to_append(new_var));
+        par->myenv[i] = ft_join_var(par->myenv[i], to_append(new_var));
         free(temp);
     }
 }
@@ -80,56 +82,71 @@ char *var_with_quotes(char *new_var)
     return(new_var_with_quotes);
 }
 
-char **handle_variables(t_params *par)
+char **handle_variables(t_params *par, int output)
 {
     char **copy;
     int size;
     int i;
     int nb;
-    int j;
     int check;
     int count_added;
+    int j;
     
     i = 0;
-    j = 1;
     count_added = 0;
-    nb = count_variables(par);
-    size = size_enb(environ);
-    copy = create_copy(environ, &size);
-    free_matrix(environ);
-    environ = malloc(sizeof(char *)*(nb+size+1));
-    while(i < size)
+    size = size_env(par->myenv);
+    nb = count_variables(par, size);
+    copy = create_copy(par->myenv, &size);
+    printf("i am here %d\n", nb);
+    // free_matrix(par->myenv);
+    par->myenv = malloc(sizeof(char *)*(nb+size+1));
+    while(copy[i])
     {
-        environ[i]=copy[i];
+        par->myenv[i]=copy[i];
         i++;
     }
+    j = 1;
+    // int v = 0;
+    // while(copy[v])
+    // {
+    //     printf("%s\n", par->myenv[v]);
+    //     v++;
+    //     printf("i am v %d\n",v);
+    // }
+
     while(i < (nb+size))
     {
-        if(check_if_valid(environ[i]) == 0)//valid
+        if(check_if_valid(par->cmd[j]) == 0)//valid
         {
-            check = check_if_add_change_append(par->cmd[i]);
+            check = check_if_add_change_append(par, par->cmd[j], i);
+            printf("i am check%d\n", check);
             if(check == 0)//add
             {
-                add_var_if_not_exist(par->cmd[i], size, count_added);
+                printf("add var\n");
+                add_var_if_not_exist(par, par->cmd[j], size, count_added);
                 count_added++;
             }
             else if(check == 1)//change
-                change_or_append_var_value(par->cmd[i], check);
+                change_or_append_var_value(par, par->cmd[j], check);
             else if(check == 2)//append
-                change_or_append_var_value(par->cmd[i], check);
+                change_or_append_var_value(par, par->cmd[j], check);
         }
-        else if(check_if_valid(par->cmd[i]) == -1)//other like * or = ...
+        else if(check_if_valid(par->cmd[j]) == -1)//other like * or = ...
         {
-            print_error_do_not_exit(par->cmd[i]);
+            // print_error_do_not_exit(par->cmd[i]);
+            write(output, "error\n", 6);
             i++;
         }
         // else if(check_if_valid(par->cmd[i]) == -2)//$
         //     i++;
-        else if(check_if_valid(par->cmd[i]) == -3)//#
-            free_and_exit_without_printing_error(); 
-        i++;
+        else if(check_if_valid(par->cmd[j]) == -3)//#
+            exit(0);
+        // free_and_exit_without_printing_error();
+        if(par->cmd[j][0] != '$')
+            i++;
+        j++;
     }
-    environ[i] = NULL;
-    free_matrix(copy);
-    return(environ); 
+    par->myenv[i] = NULL;
+    // free_matrix(copy);
+    return(par->myenv); 
 }

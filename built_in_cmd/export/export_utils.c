@@ -1,6 +1,6 @@
-#include <../../minishell.h>
+#include "/home/elite/Desktop/minishell/minishell.h"
 
-int count_variables(t_params *par)
+int count_variables(t_params *par,int size)
 {
     int i;
     int nb;
@@ -9,7 +9,8 @@ int count_variables(t_params *par)
     nb = 0;
     while(par->cmd[i])
     {
-        if(check_if_add_change_append(par->cmd[i]) == 0)
+        printf("iiiiiiii\n");
+        if(check_if_add_change_append(par, par->cmd[i], size) == 0)
             nb++;
         i++;
     }
@@ -34,12 +35,14 @@ char *return_key(char* str)
     char *key;
 
     i = 0;
-    key = NULL;
-    while(str[i] && str[i] != '=')
+    // printf("heeere\n");
+    key = malloc(ft_strlen(str)+1);
+    while(str[i] && str[i] != '=' && str[i] != '+')
     {
         key[i]=str[i];
         i++;
     }
+    key[i]= '\0';
     return(key);
 }
 
@@ -74,7 +77,7 @@ char *to_append(char *str)
     return(str+i);
 }
 
-void add_var_if_not_exist(char *new_var, int size, int added)
+void add_var_if_not_exist(t_params *par, char *new_var, int size, int added)
 {
     int i;
 
@@ -85,8 +88,8 @@ void add_var_if_not_exist(char *new_var, int size, int added)
     }
     if(ft_strch(new_var, '=') == -1)
     {
-        environ[i] = ft_strdup(new_var);
+        par->myenv[i] = ft_strdup(new_var);
     }
     else
-        environ[i] = var_with_quotes(new_var);
+        par->myenv[i] = var_with_quotes(new_var);
 }

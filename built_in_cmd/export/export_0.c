@@ -1,30 +1,29 @@
-#include <../../minishell.h>
+#include "/home/elite/Desktop/minishell/minishell.h"
 
 void ft_export(t_params *par, int foutput)
 {
     int i;
-    int found;
     char **export;
 
     i = 0;
-    found = 0;
     // si empieza con # no importa lo que viene a continuacion lista los variables
     // si # viene al principio de una variable al centro, guarda los de antes y sale
     // si $ viene al principio y es solo lista export
     // si $ viene con otros variables skip y guarda lo de antes y despues
-    if(par->cmd[1] == NULL || par->cmd[1][0] == '#' || (par->cmd[1][0] == "$" && par->cmd[2]==NULL))
+    if(par->cmd[1] == NULL || par->cmd[1][0] == '#' || (par->cmd[1][0] == '$' && par->cmd[2]==NULL))
     {
-        export = sort_env(environ);
+        export = sort_env(par, par->myenv);
         while(export[i])
         {
             ft_putstr(export[i], foutput);
+            write(foutput, "\n", 1);
             i++;
         }
         free_matrix(export);
     }
-    if(par->cmd[1])
+    if(par->cmd[1] && par->cmd[1][0] != '#' && (par->cmd[1][0] != '$' || par->cmd[2] !=NULL))
     {
-       handle_variables(par);
+       handle_variables(par, foutput);
     }
 }
 
@@ -46,7 +45,7 @@ char **create_copy(char **str, int *size)
     return(cp);
 }
 
-void loop_over_env(char **cpy_env, char *small, int *index_of_small, int size_env)
+void loop_over_env(t_params*par, char **cpy_env, char *small, int *index_of_small, int size_env)
 {
     int count;
     int i;
@@ -63,7 +62,7 @@ void loop_over_env(char **cpy_env, char *small, int *index_of_small, int size_en
             *index_of_small = i;
             small = cpy_env[i++];
         }
-        if(environ[i] && ft_strcmp(small, cpy_env[i]) > 0 && cpy_env[i][0] != '0')
+        if(par->myenv[i] && ft_strcmp(small, cpy_env[i]) > 0 && cpy_env[i][0] != '0')
         {
             small = cpy_env[i];
             *index_of_small = i;
@@ -72,7 +71,7 @@ void loop_over_env(char **cpy_env, char *small, int *index_of_small, int size_en
     }
 }
 
-void loop(int size_env, char **export, char **cpy_env)
+void loop(t_params *par, int size_env, char **export, char **cpy_env)
 {
     int j;
     int index_of_small;
@@ -81,17 +80,17 @@ void loop(int size_env, char **export, char **cpy_env)
     j = 0;
     small = NULL;
     index_of_small = 0;
-    while(j < size_env && environ)
+    while(j < size_env && par->myenv)
     {
-        loop_over_env(cpy_env, small, &index_of_small, size_env);
-        export[j] = ft_join("declare -x ", environ[index_of_small]);
+        loop_over_env(par, cpy_env, small, &index_of_small, size_env);
+        export[j] = ft_join("declare -x ", par->myenv[index_of_small]);
         free(cpy_env[index_of_small]);
         cpy_env[index_of_small]=ft_strdup("0");
         j++;
     }
 }
 
-char **sort_env(char **export)
+char **sort_env(t_params *par, char **export)
 {
     int size_env;
     char **cpy_env;
@@ -99,12 +98,56 @@ char **sort_env(char **export)
 
 
     size_env = 0;
-    cpy_env = create_copy(environ, &size_env);
+    cpy_env = create_copy(par->myenv, &size_env);
     // free_matrix(export);
     export = malloc(sizeof(char *)*(size_env+1));
-    loop(size_env, export, cpy_env);
+    loop(par, size_env, export, cpy_env);
     export[size_env]=NULL;
     free_matrix(cpy_env);
     return(export);
 }
 
+int main(int argc, char **argv, char **env)
+{
+    t_params  *par;
+
+    int i;
+    i = 0;
+    (void)argc;
+    (void)argv;
+    par = malloc(sizeof(t_params));
+    par->cmd = malloc(6 * sizeof(char *));
+    int size = size_env(env);
+    par->myenv=create_copy(env, &size);
+    if (par->cmd == NULL) {
+        return 1;
+    }
+    par->cmd[0] = ft_strdup("export");
+    par->cmd[1] = ft_strdup("ngurp");
+    par->cmd[2] = ft_strdup("uuuu+=hoooooiiii");
+    par->cmd[3] = ft_strdup("uuuu=aaaa");
+    par->cmd[4] = ft_strdup("uuuu=anew");  
+    par->cmd[5] = NULL;
+    ft_export(par, 1);
+    while(par->myenv[i])
+    {
+        printf("%s\n", par->myenv[i]);
+        i++;
+    }
+    // printf("key %s\n", return_key(par->cmd[2]));
+    //    printf("key %s\n", return_key(par->cmd[3]));
+
+    // free_matrix(par->myenv);
+    i = 0;
+    while(par->cmd[i])
+    {
+        free(par->cmd[i]);
+        i++;
+    }
+    free(par);
+
+    // printf("%s\n", return_key("assma=thisisvalue"));
+
+
+
+}
