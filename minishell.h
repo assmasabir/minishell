@@ -66,4 +66,5 @@ void loop(t_params *par, int size_env, char **export, char **cpy_env);
 char **sort_env(t_params *par, char **export);
 void add_var_if_not_exist(t_params *par, char *new_var, int size, int added);
 int check_if_var_reapeated(t_params *par, char *new_var);
+void ft_putstr_exp(char *str, int fd);
 #endif

@@ -11,7 +11,31 @@ void ft_putstr(char *str, int fd)
         i++;
     }
 }
+void ft_putstr_exp(char *str, int fd)
+{
+    int i;
+    int check;
 
+    i = 0;
+    check = 0;
+    while(str[i])
+    {
+        if(str[i] == '=')
+        {
+            write(fd, &str[i], 1);
+            check = 1;
+            write(fd, "\"", 1);
+            i++;
+        }
+        if(str[i])
+            write(fd, &str[i], 1);
+        else
+            break;
+        i++;
+    }
+    if(check ==1)
+        write(fd, "\"", 1);
+}
 int ft_strcmp(char *str1, char *str2)
 {
     int i;

@@ -33,6 +33,7 @@ int check_if_add_change_append(t_params *par, char *new_var, int max, int *count
     {
         if(new_var[0] == '$')
             return(-1);
+        printf("hnaaa %s\n", new_var);
         keyenv = return_key(par->myenv[i]);
         // printf("keyenv%s\n ")
         // printf("i am env %s\n", keyenv);
@@ -79,6 +80,9 @@ int check_if_valid(char *new_var) //!rje3
     else if(new_var[i] == '$')
         return(-2);
     else if((new_var[i] < 'a' || new_var[i] > 'z') && (new_var[i] != '_'))
-        return(-1);
+    {
+        if(new_var[i] < 'A' || new_var[i] > 'Z')
+            return(-1);
+    }
     return(0);
 }

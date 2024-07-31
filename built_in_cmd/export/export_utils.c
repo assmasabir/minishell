@@ -114,10 +114,10 @@ void add_var_if_not_exist(t_params *par, char *new_var, int size, int added)
     {
         i++;
     }
-    if(ft_strch(new_var, '=') == -1)
-    {
+    // if(ft_strch(new_var, '=') == -1)
+    // {
         par->myenv[i] = ft_strdup(new_var);
-    }
-    else
-        par->myenv[i] = var_with_quotes(new_var);
+    // }
+    // else
+    //     par->myenv[i] = var_with_quotes(new_var);
 }

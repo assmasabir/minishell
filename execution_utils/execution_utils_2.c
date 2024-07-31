@@ -35,6 +35,7 @@ char *ft_join_var(char *str1, char *str2)
 
     i = 0;
     j = 0;
+    printf(" %s : %d, %s : %d\n", str1, ft_strlen(str1), str2, ft_strlen(str2));
     to_join = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
     while(str1[i])
     {

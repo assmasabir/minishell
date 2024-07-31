@@ -42,14 +42,14 @@ void change_or_append_var_value(t_params* par,char *new_var, int check)
         {
             printf("dfhdufho %s\n", par->myenv[i]);
             free(par->myenv[i]);
-            par->myenv[i] = var_with_quotes(new_var);
+            par->myenv[i] = ft_strdup(new_var);
         }
     }
     else if(check == 2) //append
     {
         temp = par->myenv[i];
-        printf("top %s\n", to_append(new_var));
-        par->myenv[i] = ft_join_var(par->myenv[i], to_append(new_var));
+        printf("append %s\n", to_append(new_var));
+        par->myenv[i] = ft_join(par->myenv[i], to_append(new_var));
         free(temp);
     }
 }
@@ -100,7 +100,6 @@ char **handle_variables(t_params *par, int output)
     nb = count_variables(par, size);
     copy = create_copy(par->myenv, &size);
     printf("i am here %d\n", nb);
-    // free_matrix(par->myenv);
     par->myenv = malloc(sizeof(char *)*(nb+size+1));
     while(copy[i])
     {
@@ -108,23 +107,13 @@ char **handle_variables(t_params *par, int output)
         i++;
     }
     j = 1;
-    // int v = 0;
-    // while(copy[v])
-    // {
-    //     printf("%s\n", par->myenv[v]);
-    //     v++;
-    //     printf("i am v %d\n",v);
-    // }
-    int max = nb+size;
-    // int b = 1;
-    // while(par->cmd[b])
-    // {
-    //     printf("cmd %s\n", par->cmd[b]);
-    //     b++;
-    // }
-    free(par);
-    printf("cmd %s\n", par->cmd[i]);
-    while(i < max)
+    int b = 1;
+    while(par->cmd[b])
+    {
+        printf("cmd %s\n", par->cmd[b]);
+        b++;
+    }
+    while(par->cmd[j])
     {
         printf("test\n");
         if(check_if_valid(par->cmd[j]) == 0)//valid
@@ -148,7 +137,6 @@ char **handle_variables(t_params *par, int output)
         }
         else if(check_if_valid(par->cmd[j]) == -1)//other like * or = ...
         {
-            // print_error_do_not_exit(par->cmd[i]);
             write(output, "error\n", 6);
             i++;
         }
@@ -161,8 +149,8 @@ char **handle_variables(t_params *par, int output)
             i++;
         j++;
     }
-    if(duplicated_keys != 0)
-        i = i - duplicated_keys;
+
+    i = i - duplicated_keys - 1;
     par->myenv[i] = NULL;
     // free_matrix(copy);
     return(par->myenv); 

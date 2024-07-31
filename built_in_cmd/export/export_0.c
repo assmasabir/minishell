@@ -16,7 +16,7 @@ int  ft_export(t_params *par, int foutput)
         printf("fiiirst\n");
         while(export[i])
         {
-            ft_putstr(export[i], foutput);
+            ft_putstr_exp(export[i], foutput);
             write(foutput, "\n", 1);
             i++;
         }
@@ -124,20 +124,20 @@ int main(int argc, char **argv, char **env)
         return 1;
     }
     par->cmd[0] = ft_strdup("export");
-    par->cmd[1] = ft_strdup("ngurp");
+    par->cmd[1] = ft_strdup("?ngurp");
     par->cmd[2] = ft_strdup("uuuu=hoooooiiii");
     par->cmd[3] = ft_strdup("uuuu=aaaa");
     par->cmd[4] = ft_strdup("uuuu+=lalala");
-    par->cmd[5] = ft_strdup("VSCODE_INJECTION=miaw");
+    par->cmd[5] = ft_strdup("VSCODE_INJECTION+=miaw");
     par->cmd[6] = NULL;
     int fhgd = ft_export(par, 1);
     (void)fhgd;
-    // while(par->myenv[i])
-    // {
-    //     printf("%s\n", par->myenv[i]);
-    //     i++;
-    // }
-    // i = 0;
+    while(par->myenv[i])
+    {
+        printf("%s\n", par->myenv[i]);
+        i++;
+    }
+    i = 0;
     while(par->cmd[i])
     {
         free(par->cmd[i]);
