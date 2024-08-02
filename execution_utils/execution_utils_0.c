@@ -36,6 +36,7 @@ void ft_putstr_exp(char *str, int fd)
     if(check ==1)
         write(fd, "\"", 1);
 }
+
 int ft_strcmp(char *str1, char *str2)
 {
     int i;
@@ -80,26 +81,3 @@ char *ft_strdup(char *str)
     return(cp);
 }
 
-char *ft_join(char *str1, char *str2)
-{
-    int i;
-    int j;
-    char *to_join;
-
-    i = 0;
-    j = 0;
-    to_join = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
-    while(str1[i])
-    {
-        to_join[i] = str1[i];
-        i++;
-    }
-    while(str2[j])
-    {
-        to_join[i] = str2[j];
-        i++;
-        j++;
-    }
-    to_join[i] = '\0';
-    return(to_join);
-}

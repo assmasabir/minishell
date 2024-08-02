@@ -38,23 +38,33 @@ void ft_echo(t_params *par, int fd)
 
 void ft_cd(t_params *par, int output)
 {
-    char *env;
+    char *old_env;
+    char *current_env;
 
     if(par->cmd[1] == NULL || ft_strcmp(par->cmd[1], ".") == 0)
         free_and_exit_succes();
     else if(ft_strcmp(par->cmd[1], "-") == 0)
     {
-        env = getenv("OLDPWD");
-        ft_putstr(env, output);
-        if(chdir(env) == -1)
+        old_env = getenv("OLDPWD");
+        current_env = getenv("PWD");
+        write(1, "\n", 1);
+        if(chdir(old_env) == -1)
+        {
             //!perro_ end exit failure(ex : if OLDPWD is unset)
-        
+            //!exit(1);
+        }
+        else
+        {
+            ft_putstr(old_env, output);
+            ft_setenv("OLDPWD", current_env);
+            ft_setenv("PWD", old_env);
+        }
     }
     else if(ft_strcmp(par->cmd[1], ".." == 0))
     {
 
     }
-    else if(ft_strcmp())
+    else if(ft_strcmp(par->cmd[1], "~" == 0))
     {
 
     }
@@ -68,18 +78,4 @@ void ft_cd(t_params *par, int output)
 // void ft_unset(t_params *par)
 // {
 
-// }
-
-// int main(int argc, char **argv)
-// {
-//     (void)argc;
-//     (void)argv;
-//     int i;
-
-//     i = 0;
-//     while(export[i])
-//     {
-//         printf("%s\n", export[i]);
-//         i++;
-//     }
 // }

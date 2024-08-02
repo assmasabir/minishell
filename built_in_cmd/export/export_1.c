@@ -1,85 +1,73 @@
  #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
-// void *modify_var(char *new_var, int check)
-// {
-//     int i;
-//     char *key_var;
-
-//     i = 0;
-//     key_var = return_key(new_var);
-//     while(par->myenv[i])
-//     {
-//         if(ft_strcmp(return_key(par->myenv[i]),key_var) == 0)
-//             break;
-//         i++;
-//     }
-//     par->myenv[i]=modify_var(par->myenv[i], str, 0);
-// }
-
-void change_or_append_var_value(t_params* par,char *new_var, int check)
+char *add_non_existing_append_var(char *new_var)
 {
-    int i;
-    char *temp;
-    char *key_var;
-
-    i = 0;
-    key_var = return_key(new_var);
-    while(par->myenv[i])
-    {
-        if(ft_strcmp(return_key(par->myenv[i]),key_var) == 0)
-            break;
-        i++;
-    }
-    if(check == 1) //change
-    {
-        if(ft_strch(new_var, '=') == -1)
-        {
-            // printf("ddijfidjf\n");
-            free(par->myenv[i]);
-            par->myenv[i] = ft_strdup(new_var);
-        }
-        else
-        {
-            printf("dfhdufho %s\n", par->myenv[i]);
-            free(par->myenv[i]);
-            par->myenv[i] = ft_strdup(new_var);
-        }
-    }
-    else if(check == 2) //append
-    {
-        temp = par->myenv[i];
-        printf("append %s\n", to_append(new_var));
-        par->myenv[i] = ft_join(par->myenv[i], to_append(new_var));
-        free(temp);
-    }
-}
-
-//*si no tiene = no entra
-//*no olvides el caso en el que se le da empty string a=""
-char *var_with_quotes(char *new_var)
-{
-    char *new_var_with_quotes;
+    char *str;
     int i;
     int j;
 
     i = 0;
-    new_var_with_quotes = malloc(ft_strlen(new_var)+3);
-    while(new_var[i] && new_var[i] != '=')
+    j = 0;
+    str = malloc(ft_strlen(new_var));
+    while(new_var[i])
     {
-        new_var_with_quotes[i]= new_var[i];
+        if(new_var[i] == '+')
+            i++;
+        str[j] = new_var[i];
         i++;
+        j++;
     }
-    new_var_with_quotes[i++] = '=';
-    j = i;
-    new_var_with_quotes[i++] = '"';
-    while(new_var[j])
+    str[j]='\0';
+    return(str);
+}
+
+void change_value(char *new_var, int i)
+{
+    if(ft_strch(new_var, '=') == -1)
     {
-        new_var_with_quotes[i]=new_var[j++];
-        i++;
+        free(environ[i]);
+        environ[i] = ft_strdup(new_var);
     }
-    new_var_with_quotes[i++] = '"';
-    new_var_with_quotes[i]= '\0';
-    return(new_var_with_quotes);
+    else
+    {
+        free(environ[i]);
+        environ[i] = ft_strdup(new_var);
+    }
+}
+
+void append_value(char *new_var, int i)
+{
+    char *temp;
+
+    temp = environ[i];
+    environ[i] = ft_join(environ[i], to_append(new_var));
+    free(temp);
+}
+
+void change_or_append_var_value(char *new_var, int check)
+{
+    int i;
+    char *key_var;
+    char *key_env;
+
+    i = 0;
+    key_var = return_key(new_var);
+    while(environ[i])
+    {   
+        key_env = return_key(environ[i]);
+        if(ft_strcmp(key_env,key_var) == 0)
+        {
+            free(key_env);
+            break;
+        }
+        i++;
+        free(key_env);
+    }
+    if(check == 1) //change
+        change_value(new_var, i);
+    else if(check == 2) //append
+        append_value(new_var, i);
+    free(key_var);
 }
 
 char **handle_variables(t_params *par, int output)
@@ -96,49 +84,48 @@ char **handle_variables(t_params *par, int output)
     i = 0;
     duplicated_keys = 0;
     count_added = 0;
-    size = size_env(par->myenv);
+    size = size_env(environ);
     nb = count_variables(par, size);
-    copy = create_copy(par->myenv, &size);
-    printf("i am here %d\n", nb);
-    par->myenv = malloc(sizeof(char *)*(nb+size+1));
+    copy = create_copy(environ, &size);
+    environ = malloc(sizeof(char *)*(nb+size+1));
     while(copy[i])
     {
-        par->myenv[i]=copy[i];
+        environ[i]=copy[i];
         i++;
     }
     j = 1;
-    int b = 1;
-    while(par->cmd[b])
-    {
-        printf("cmd %s\n", par->cmd[b]);
-        b++;
-    }
+    
+    free(copy);
     while(par->cmd[j])
     {
-        printf("test\n");
         if(check_if_valid(par->cmd[j]) == 0)//valid
         {
             check = check_if_add_change_append(par, par->cmd[j], i+1, &duplicated_keys);
             printf("i am check%d\n", check);
             if(check == 0)//add
             {
-                printf("add var\n");
-                add_var_if_not_exist(par, par->cmd[j], size, count_added);
+                add_var_if_not_exist(par->cmd[j], size, count_added, check);
                 count_added++;
             }
             else if(check == 1)//change
             {
-                change_or_append_var_value(par, par->cmd[j], check);
+                change_or_append_var_value(par->cmd[j], check);
             }
             else if(check == 2)//append
             {
-                change_or_append_var_value(par, par->cmd[j], check);
+                change_or_append_var_value(par->cmd[j], check);
+            }
+            else if(check == 3)
+            {
+                add_var_if_not_exist(par->cmd[j], size, count_added, check);
+                count_added++;
             }
         }
         else if(check_if_valid(par->cmd[j]) == -1)//other like * or = ...
         {
             write(output, "error\n", 6);
-            i++;
+            // err_check = 1;
+            i--;
         }
         // else if(check_if_valid(par->cmd[i]) == -2)//$
         //     i++;
@@ -149,9 +136,7 @@ char **handle_variables(t_params *par, int output)
             i++;
         j++;
     }
-
     i = i - duplicated_keys - 1;
-    par->myenv[i] = NULL;
-    // free_matrix(copy);
-    return(par->myenv); 
+    environ[i] = NULL;
+    return(environ); 
 }

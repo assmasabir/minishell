@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
+extern char **environ;
 
 typedef struct Files
 {
@@ -34,6 +35,11 @@ typedef struct Exprot
     char *value;
     struct Export *next;
 } t_export;
+
+typedef struct Cd
+{
+    char **cmd;
+} t_cd;
 
 int list_size(t_params *param);
 int ft_strcmp(char *str1, char *str2);
@@ -64,7 +70,8 @@ char **create_copy(char **str, int *size);
 int size_env(char **env);
 void loop(t_params *par, int size_env, char **export, char **cpy_env);
 char **sort_env(t_params *par, char **export);
-void add_var_if_not_exist(t_params *par, char *new_var, int size, int added);
+void add_var_if_not_exist(char *new_var, int size, int added, int check);
 int check_if_var_reapeated(t_params *par, char *new_var);
 void ft_putstr_exp(char *str, int fd);
+char *add_non_existing_append_var(char *new_var);
 #endif

@@ -3,18 +3,31 @@
 int check_if_var_reapeated(t_params *par, char *new_var)
 {
     int i;
+    char *key_cmd;
+    char *key_new_var;
 
     i = 1;
+    key_new_var = return_key(new_var);
     while(par->cmd[i])
     {
+        key_cmd = return_key(par->cmd[i]);
         if(ft_strcmp(par->cmd[i], new_var) == 0)
             i++;
-        if(par->cmd[i] && ft_strcmp(return_key(par->cmd[i]), return_key(new_var)) == 0)
+        if(par->cmd[i] && ft_strcmp(key_cmd, key_new_var) == 0)
+        {
+            free(key_cmd);
+            free(key_new_var);
             return(1);
+        }
         if(!par->cmd[i])
+        {
+            free(key_cmd);
             break;  
+        }
         i++;
+        free(key_cmd);
     }
+    free(key_new_var);
     return(0);
 }
 
@@ -23,24 +36,20 @@ int count_variables(t_params *par,int size)
     int i;
     int nb;
     int count;
-    // int how_many_repeated_keys;
+    int check;
 
     i = 1;
     nb = 0;
     count = 0;
-    // how_many_repeated_keys = 0;
     while(par->cmd[i])
     {
-        printf("iiiiiiii\n");
-        // if(check_if_var_reapeated(par, i) == 1)
-        //     how_many_repeated_keys++;
-        if(check_if_add_change_append(par, par->cmd[i], size, &count) == 0)
+        check = check_if_add_change_append(par, par->cmd[i], size, &count);
+        if( check == 0 || check == 3)
         {
             nb++;
         }
         i++;
     }
-    // nb += how_many_repeated_keys/2;
     return(nb);
 }
 
@@ -62,7 +71,6 @@ char *return_key(char* str)
     char *key;
 
     i = 0;
-    // printf("heeere\n");
     key = malloc(ft_strlen(str)+1);
     while(str[i] && str[i] != '=' && str[i] != '+')
     {
@@ -105,7 +113,7 @@ char *to_append(char *str)
     return(str+i);
 }
 
-void add_var_if_not_exist(t_params *par, char *new_var, int size, int added)
+void add_var_if_not_exist(char *new_var, int size, int added, int check)
 {
     int i;
 
@@ -114,10 +122,8 @@ void add_var_if_not_exist(t_params *par, char *new_var, int size, int added)
     {
         i++;
     }
-    // if(ft_strch(new_var, '=') == -1)
-    // {
-        par->myenv[i] = ft_strdup(new_var);
-    // }
-    // else
-    //     par->myenv[i] = var_with_quotes(new_var);
+    if(check == 0)
+        environ[i] = ft_strdup(new_var);
+    else if(check == 3)
+        environ[i] = add_non_existing_append_var(new_var);
 }

@@ -18,6 +18,7 @@ int check_if_append(char *new_var)
 //0 es decir add
 //1 es decir change
 //2 es decir append
+//3 si escribimos una variable asi u+=value pero noexite antes
 int check_if_add_change_append(t_params *par, char *new_var, int max, int *count)
 {
     int i;
@@ -28,20 +29,14 @@ int check_if_add_change_append(t_params *par, char *new_var, int max, int *count
     i = 0;
     check = 0;
     keyvar = return_key(new_var);
-    printf("hesbi meaya\n");
     while(i < max-1)
     {
         if(new_var[0] == '$')
             return(-1);
-        printf("hnaaa %s\n", new_var);
-        keyenv = return_key(par->myenv[i]);
-        // printf("keyenv%s\n ")
-        // printf("i am env %s\n", keyenv);
-        // printf("%s'n", keyenv);
-        // printf("i am var %s\n", keyvar);
+        keyenv = return_key(environ[i]);
         if(ft_strcmp(keyenv, keyvar) == 0)
         {
-            printf("hhhh\n");
+            free(keyenv);
             check = 1;
             break;
         }
@@ -49,20 +44,23 @@ int check_if_add_change_append(t_params *par, char *new_var, int max, int *count
     free(keyenv);
     }
     free(keyvar);
-    if(check == 0)
+    if(check == 0 && check_if_append(new_var) != 0)
         return (0);
-    if(check == 1 && check_if_append(new_var) != 0)
+    else if(check == 0 && check_if_append(new_var) == 0)
+        return(3);
+    else if(check == 1 && check_if_append(new_var) != 0)
     {
         if(check_if_var_reapeated(par, new_var) == 1)
             (*count)++;
         return(1);
     }
-    if(check == 1 && check_if_append(new_var) == 0)
+    else if(check == 1 && check_if_append(new_var) == 0)
     {
         if(check_if_var_reapeated(par, new_var) == 1)
             (*count)++;
         return(2);
     }
+    else
     return(-1);
 }
 

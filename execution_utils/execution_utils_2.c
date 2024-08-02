@@ -26,31 +26,3 @@ void free_matrix(char **str)
     }
     free(str);
 }
-
-char *ft_join_var(char *str1, char *str2)
-{
-    int i;
-    int j;
-    char *to_join;
-
-    i = 0;
-    j = 0;
-    printf(" %s : %d, %s : %d\n", str1, ft_strlen(str1), str2, ft_strlen(str2));
-    to_join = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
-    while(str1[i])
-    {
-        if(str1[i] == '"' && str1[i+1] == '\0')
-            break;
-        to_join[i] = str1[i];
-        i++;
-    }
-    while(str2[j])
-    {
-        to_join[i] = str2[j];
-        i++;
-        j++;
-    }
-    to_join[i] = '"';
-    to_join[i+1] = '\0';
-    return(to_join);
-}

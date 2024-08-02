@@ -51,12 +51,12 @@
 
 //     i = 0;
 //     found = 0;
-//     while(par->myenv[i])
+//     while(environ[i])
 //     {
-//         if(ft_strncmp(name, par->myenv[i], ft_strlen(name)) == 0)
+//         if(ft_strncmp(name, environ[i], ft_strlen(name)) == 0)
 //         {   
-//             free(par->myenv[i]);
-//             par->myenv[i]= fill_and_concat(name, value);
+//             free(environ[i]);
+//             environ[i]= fill_and_concat(name, value);
 //             found = 1;
 //         }
 //         i++;
