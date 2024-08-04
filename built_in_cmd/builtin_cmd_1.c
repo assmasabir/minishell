@@ -1,25 +1,52 @@
 #include "../minishell.h"
 
 
-char *parent_directory_path(char *current_dir)
+void alter_var(char *new_var, int i)
+{
+    environ[i] = ft_strdup(new_var);
+}
+
+void change_variable(char *new_var)
 {
     int i;
+    char *key_var;
+    char *key_env;
+
+    i = 0;
+    key_var = return_key(new_var);
+    while(environ[i])
+    {   
+        key_env = return_key(environ[i]);
+        if(ft_strcmp(key_env,key_var) == 0)
+        {
+            free(key_env);
+            break;
+        }
+        i++;
+        free(key_env);
+    }
+    alter_var(new_var, i);
+    free(key_var);
+}
+
+char *parent_directory_path(char *current_dir)
+{
     char *parent_dir;
     int size_path;
     int max;
 
-    i = 1;
-    if(current_dir[0] && current_dir[1] == '\0')
+    parent_dir = NULL;
+    if(current_dir[0] == '/' && current_dir[1] == '\0')
         return(current_dir);
     else
     {
         size_path = ft_strlen(current_dir); 
         max = size_path - 1; 
-        while(max != '/')
+        while(current_dir[max] != '/')
         {
             max--;
         }
-        max = size_path - max;
+        parent_dir = malloc(sizeof(char)*(max + 1));
         parent_dir  = ft_strncpy(current_dir, parent_dir, max);
     }
     return (parent_dir);
@@ -44,10 +71,10 @@ void case_go_back(int output)
     {
         var_and_value = ft_join("OLDPWD=", current_env);
         ft_putstr(old_env, output);
-        change_or_append_var_value(var_and_value, 1);
+        change_variable(var_and_value);
         free(var_and_value);
         var_and_value = ft_join("PWD=", old_env);
-        change_or_append_var_value(var_and_value, 1);
+        change_variable(var_and_value);
         free(var_and_value);
     }
 }
@@ -62,40 +89,163 @@ void case_go_up()
     current_dir = getcwd(current_dir, 0);
     if(current_dir == NULL)
     {
+        free(current_dir);
         write(1, "error\n", 6);
         //perror end
     }
     parent_dir = parent_directory_path(current_dir);
+    printf("i am parent dir %s\n", parent_dir);
     if(chdir(parent_dir) == -1)
     {
         write(1, "error\n", 6);
-            //error message
+        //error message
     }
     else
     {
         var_and_value = ft_join("OLDPWD=", current_dir);
-        change_or_append_var_value(var_and_value, 1);
+        change_variable(var_and_value);
         free(var_and_value);
         var_and_value = ft_join("PWD=", parent_dir);
-        change_or_append_var_value(var_and_value, 1);
+        change_variable(var_and_value);
         free(var_and_value);
     }
+    free(parent_dir);
+    free(current_dir);
+
 }
 
 void case_go_home()
 {
-    
+    char *home_dir;
+    char *var_and_value;
+    char *current_dir;
+
+    current_dir = NULL;
+    home_dir = getenv("HOME");
+    current_dir = getcwd(current_dir, 0);
+    if(current_dir == NULL)
+    {
+        write(1, "error\n", 6);
+        //perror
+    }
+    if(home_dir == NULL)
+    {
+        //error home is not set
+    }
+    else
+    {
+        if(chdir(home_dir) == -1)
+        {
+            //error message
+        }
+        else 
+        {
+            var_and_value = ft_join("PWD=", home_dir);
+            change_variable(var_and_value);
+            free(var_and_value);
+            var_and_value = ft_join("OLDPWD=", current_dir);
+            free(current_dir);
+            change_variable(var_and_value);
+            free(var_and_value);
+        }
+    }
 }
+
+void handle_absolute_paths(t_params *par)
+{
+    char *current_dir;
+    char *var_and_value;
+
+    current_dir = NULL;
+    current_dir = getcwd(current_dir, 0);
+    if(current_dir == NULL)
+    {
+        write(1, "error\n", 6);
+        //perror end
+    }
+    if(ft_strcmp(par->cmd[1], "/") == 0)
+    {
+        if(chdir("/") == -1)
+        {
+            //error massage 
+        }
+    }
+    else
+    {
+        if(access(par->cmd[1], X_OK) == -1)
+        {
+            //error_and_exit
+        }
+        else
+        {
+            if(chdir(par->cmd[1]) == -1)
+            {
+                //error message
+            }
+            else
+            {
+                var_and_value = ft_join("OLDPWD=", current_dir);
+                free(current_dir);
+                change_variable(var_and_value);
+                free(var_and_value);
+                var_and_value = ft_join("PWD=", par->cmd[1]);
+                change_variable(var_and_value);
+                free(var_and_value);
+            }
+        }
+    }
+}
+
 // ay envirement variable kaytzad meah new line ms hana testi b \0 temporairement
 void ft_cd(t_params *par, int output)
 {
     if(par->cmd[1] == NULL || ft_strcmp(par->cmd[1], ".") == 0)
-        free_and_exit_succes();
+    {
+        write(1, "error\n", 6);    
+        //free_and_exit_succes();  
+    }
     else if(ft_strcmp(par->cmd[1], "-") == 0)
         case_go_back(output);
-    else if(ft_strcmp(par->cmd[1], ".." == 0))
+    else if(ft_strcmp(par->cmd[1], "..") == 0)
         case_go_up();
-    else if(ft_strcmp(par->cmd[1], "~" == 0))
+    else if(ft_strcmp(par->cmd[1], "~") == 0)
         case_go_home();
+    else if(ft_strch(par->cmd[1], '/' ) == 0)
+    {
+        handle_absolute_paths(par);    
+    }
+    else
+    {
+        write(1, "error\n", 6);
+        //error no sush file or directory
+    }
 }
 
+int main()
+{
+    t_params  *par;
+
+    int i;
+    i = 0;
+    par = malloc(sizeof(t_params));
+    par->cmd = malloc(3 * sizeof(char *));
+    if (par->cmd == NULL) {
+        return 1;
+    }
+    par->cmd[0] = ft_strdup("cd");
+    par->cmd[1] = ft_strdup("..");
+    par->cmd[2] = NULL;
+    ft_cd(par, 1);
+    while(environ[i])
+    {
+        printf("%s\n", environ[i]);
+        i++;
+    }
+    i = 0;
+    while(par->cmd[i])
+    {
+        free(par->cmd[i]);
+        i++;
+    }
+    free(par);
+}

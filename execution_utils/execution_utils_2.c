@@ -37,5 +37,6 @@ char *ft_strncpy(char *str1, char *str2, int n)
         str2[i] = str1[i];
         i++;
     }
+    str2[i] = '\0';
     return(str2);
 }

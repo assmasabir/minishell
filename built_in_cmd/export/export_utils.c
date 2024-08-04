@@ -1,4 +1,4 @@
- #include "/home/elite/Desktop/minishell/minishell.h"
+ #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 int check_if_var_reapeated(t_params *par, char *new_var)
 {
