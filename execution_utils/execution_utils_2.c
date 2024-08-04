@@ -26,3 +26,16 @@ void free_matrix(char **str)
     }
     free(str);
 }
+
+char *ft_strncpy(char *str1, char *str2, int n)
+{
+    int i;
+
+    i = 0;
+    while(str1[i] && i < n)
+    {
+        str2[i] = str1[i];
+        i++;
+    }
+    return(str2);
+}

@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/minishell/minishell.h"
 
 //0 es decir append
 int check_if_append(char *new_var)

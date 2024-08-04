@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/minishell/minishell.h"
 
     // si empieza con # no importa lo que viene a continuacion lista los variables
     // si # viene al principio de una variable al centro, guarda los de antes y sale

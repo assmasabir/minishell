@@ -74,4 +74,8 @@ void add_var_if_not_exist(char *new_var, int size, int added, int check);
 int check_if_var_reapeated(t_params *par, char *new_var);
 void ft_putstr_exp(char *str, int fd);
 char *add_non_existing_append_var(char *new_var);
+void change_or_append_var_value(char *new_var, int check);
+void change_value(char *new_var, int i);
+void append_value(char *new_var, int i);
+char *ft_strncpy(char *str1, char *str2, int n);
 #endif
