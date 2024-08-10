@@ -5,13 +5,18 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <fcntl.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 3
+# endif
 
 extern char **environ;
 
 typedef struct Files
 {
     int type;
-    char *name_file;
+    char *name;
     struct Files *next;
 } t_files;
 
@@ -45,25 +50,20 @@ int list_size(t_params *param);
 int ft_strcmp(char *str1, char *str2);
 int ft_strncmp(char *str1, char *str2, int n);
 char **ft_split(char *str);
-int ft_strch(char *str, char c);
+int ft_strchr(char *str, char c);
 
 
 
 void ft_putstr(char *str, int fd);
 int ft_strlen(char *str);
-char *uppercase(char *name);
 char *ft_join(char *str1, char *str2);
 char *ft_strdup(char *str);
 void free_matrix(char **str);
-void *modify_existing_var(t_params *par, char *str);
 int check_if_append(char *new_var);
 int check_if_add_change_append(t_params *par,char *new_var, int max, int *count);
 int check_if_valid(char *new_var);
-char *var_with_quotes(char *new_var);
-char *ft_join_var(char *str1, char *str2);
 char **handle_variables(t_params *par, int output);
 char *return_key(char* str);
-char *return_value(char *str);
 int count_variables(t_params *par, int size);
 char *to_append(char *str);
 char **create_copy(char **str, int *size);
@@ -78,4 +78,7 @@ void change_or_append_var_value(char *new_var, int check);
 void change_value(char *new_var, int i);
 void append_value(char *new_var, int i);
 char *ft_strncpy(char *str1, char *str2, int n);
+char	*get_next_line(int fd);
+char	*ft_strcpy(char *dest, const char *src);
+char	*free_and_join(char **reserve, char *buff);
 #endif

@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int ft_strch(char *str, char c)
+int ft_strchr(char *str, char c)
 {
     int i;
 

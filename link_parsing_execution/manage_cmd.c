@@ -35,10 +35,8 @@ void allocate_array(t_params *par, int nb_pipes)
     }
 }
 
-
 void manage_cmds(t_params *par)
 {
-    int *fd;
     int i;
     int nb_pipes;
 
@@ -47,9 +45,9 @@ void manage_cmds(t_params *par)
     par->nb_nodes = list_size(par);
     nb_pipes = par->nb_nodes - 1;
     allocate_array(par, nb_pipes);
-    while(i<= nb_pipes)
+    while(i <= nb_pipes)
     {
-        if(pipe(fd[i] !=- 1))
+        if(pipe(par->fd[i] !=- 1))
             exit(EXIT_FAILURE);
         i++;
     }
@@ -59,4 +57,5 @@ void manage_cmds(t_params *par)
         redirect_cmd(par);
         i++;
     }
+
 }

@@ -28,9 +28,9 @@ int search_cmd(char *cmd, char **env)
     paths = ft_split(path_variable);
     while(paths[i])
     {
-
+        
     }
-    return();
+    return ();
 }
 
 void ft_executable(char **cmd)

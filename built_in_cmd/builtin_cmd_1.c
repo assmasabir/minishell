@@ -163,35 +163,28 @@ void handle_absolute_paths(t_params *par)
         write(1, "error\n", 6);
         //perror end
     }
-    if(ft_strcmp(par->cmd[1], "/") == 0)
+    if(access(par->cmd[1], X_OK) == -1)
     {
-        if(chdir("/") == -1)
-        {
-            //error massage 
-        }
+        //error_and_exit
+        write(1, "error\n", 6);
+        perror(NULL);
+        exit(-1);
     }
     else
     {
-        if(access(par->cmd[1], X_OK) == -1)
+        if(chdir(par->cmd[1]) == -1)
         {
-            //error_and_exit
+            //error message
         }
         else
         {
-            if(chdir(par->cmd[1]) == -1)
-            {
-                //error message
-            }
-            else
-            {
-                var_and_value = ft_join("OLDPWD=", current_dir);
-                free(current_dir);
-                change_variable(var_and_value);
-                free(var_and_value);
-                var_and_value = ft_join("PWD=", par->cmd[1]);
-                change_variable(var_and_value);
-                free(var_and_value);
-            }
+            var_and_value = ft_join("OLDPWD=", current_dir);
+            free(current_dir);
+            change_variable(var_and_value);
+            free(var_and_value);
+            var_and_value = ft_join("PWD=", par->cmd[1]);
+            change_variable(var_and_value);
+            free(var_and_value);
         }
     }
 }
@@ -210,7 +203,7 @@ void ft_cd(t_params *par, int output)
         case_go_up();
     else if(ft_strcmp(par->cmd[1], "~") == 0)
         case_go_home();
-    else if(ft_strch(par->cmd[1], '/' ) == 0)
+    else if(ft_strchr(par->cmd[1], '/' ) == 0)
     {
         handle_absolute_paths(par);    
     }
@@ -219,33 +212,4 @@ void ft_cd(t_params *par, int output)
         write(1, "error\n", 6);
         //error no sush file or directory
     }
-}
-
-int main()
-{
-    t_params  *par;
-
-    int i;
-    i = 0;
-    par = malloc(sizeof(t_params));
-    par->cmd = malloc(3 * sizeof(char *));
-    if (par->cmd == NULL) {
-        return 1;
-    }
-    par->cmd[0] = ft_strdup("cd");
-    par->cmd[1] = ft_strdup("..");
-    par->cmd[2] = NULL;
-    ft_cd(par, 1);
-    while(environ[i])
-    {
-        printf("%s\n", environ[i]);
-        i++;
-    }
-    i = 0;
-    while(par->cmd[i])
-    {
-        free(par->cmd[i]);
-        i++;
-    }
-    free(par);
 }

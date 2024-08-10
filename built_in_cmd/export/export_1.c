@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/miinishell/minishell.h"
 
 char *add_non_existing_append_var(char *new_var)
 {
@@ -23,7 +23,7 @@ char *add_non_existing_append_var(char *new_var)
 
 void change_value(char *new_var, int i)
 {
-    if(ft_strch(new_var, '=') == -1)
+    if(ft_strchr(new_var, '=') == -1)
     {
         free(environ[i]);
         environ[i] = ft_strdup(new_var);

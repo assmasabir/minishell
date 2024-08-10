@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/miinishell/minishell.h"
 
 int check_if_var_reapeated(t_params *par, char *new_var)
 {
@@ -79,25 +79,6 @@ char *return_key(char* str)
     }
     key[i]= '\0';
     return(key);
-}
-
-char *return_value(char *str)
-{
-    int i;
-    char *value;
-
-    i = 0;
-    value = NULL;
-    while(str[i] && str[i] != '=')
-    {
-        i++;
-    }
-    while(str[i])
-    {
-        value[i]=str[i];
-        i++;
-    }
-    return(value);
 }
 
 char *to_append(char *str)
