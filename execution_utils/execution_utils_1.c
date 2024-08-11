@@ -45,7 +45,7 @@ int count_paths(char *str)
     return (count);
 }
 
-char **ft_split(char *str)
+char **ft_split(char *str, char c)
 {
     int i;
     int size;
@@ -61,7 +61,7 @@ char **ft_split(char *str)
     {
         size = 0;
         n = 0;
-        while(str[size] != ':' && str[size])
+        while(str[size] != c && str[size])
             size++;
         to_return[i] = malloc((size + 1));
         while(n < size)

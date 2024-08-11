@@ -49,7 +49,7 @@ typedef struct Cd
 int list_size(t_params *param);
 int ft_strcmp(char *str1, char *str2);
 int ft_strncmp(char *str1, char *str2, int n);
-char **ft_split(char *str);
+char **ft_split(char *str,char c);
 int ft_strchr(char *str, char c);
 
 

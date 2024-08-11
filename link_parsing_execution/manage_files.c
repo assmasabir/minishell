@@ -52,6 +52,21 @@ int parse_files(t_params *par, int *outfile, int *infile)
     return(0);
 }
 
+void case_first(t_params *par, int i, int infile, int outfile)
+{
+    
+}
+
+void case_middle(t_params *par, int *i,int infile, int outfile)
+{
+
+}
+
+void case_last(t_params *par, int *i,int infile, int outfile)
+{
+    
+}
+
 int manage_files(t_params *par)
 {
     int i;
@@ -60,13 +75,14 @@ int manage_files(t_params *par)
     int nb_pipes;
 
     par->nb_nodes = list_size(par);
+    allocate_array(par, nb_pipes);
     nb_pipes = par->nb_nodes -1;
-    outfile = 1;
-    infile = 0;
     i = 0;
 
     while(par)
     {
+        outfile = 1;
+        infile = 0;
         if(parse_files(par, &outfile, &infile) == -1)
         {
             //free and exit
@@ -76,11 +92,11 @@ int manage_files(t_params *par)
             if(i < nb_pipes)
             {
                 if(i == 0)
-                    case_first();
-                else if(i != nb_pipes - 1)
-                    case_middle();
-                else if(i == nb_pipes - 1)
-                    case_last();
+                    case_first(par, i, infile, outfile);
+                if(i != nb_pipes - 1)
+                    case_middle(par, &i, infile, outfile);
+                if(i == nb_pipes - 1)
+                    case_last(par, &i, infile, outfile);
             }
         }
         par= par->next;

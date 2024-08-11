@@ -35,27 +35,27 @@ void allocate_array(t_params *par, int nb_pipes)
     }
 }
 
-void manage_cmds(t_params *par)
-{
-    int i;
-    int nb_pipes;
+// void manage_cmds(t_params *par)
+// {
+//     int i;
+//     int nb_pipes;
 
-    i = 0;
-    par->fd_pos = 0;
-    par->nb_nodes = list_size(par);
-    nb_pipes = par->nb_nodes - 1;
-    allocate_array(par, nb_pipes);
-    while(i <= nb_pipes)
-    {
-        if(pipe(par->fd[i] !=- 1))
-            exit(EXIT_FAILURE);
-        i++;
-    }
-    i = 0;
-    while(i <= nb_pipes)
-    {
-        redirect_cmd(par);
-        i++;
-    }
+//     i = 0;
+//     par->fd_pos = 0;
+//     par->nb_nodes = list_size(par);
+//     nb_pipes = par->nb_nodes - 1;
+//     allocate_array(par, nb_pipes);
+//     while(i <= nb_pipes)
+//     {
+//         if(pipe(par->fd[i] !=- 1))
+//             exit(EXIT_FAILURE);
+//         i++;
+//     }
+//     i = 0;
+//     while(i <= nb_pipes)
+//     {
+//         redirect_cmd(par);
+//         i++;
+//     }
 
-}
+// }
