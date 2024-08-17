@@ -27,7 +27,7 @@ typedef struct Params
     char **env;
     t_files *files;
     int nb_nodes;
-    int *fd;
+    int **fd;
     int fd_pos;
     char **myenv;
     struct Params *next;
@@ -81,4 +81,16 @@ char *ft_strncpy(char *str1, char *str2, int n);
 char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, const char *src);
 char	*free_and_join(char **reserve, char *buff);
+int search_cmd(char *cmd, char **path_variable);
+void child_process(t_params* par, int infile, int outfile, char *path_variable);
+void redirect_cmd(t_params *par, int type, int outfile);
+int cmdType(t_params *par);
+void ft_echo(t_params *par, int fd);
+void ft_env(int fd);
+void ft_pwd(int fd);
+void ft_unset(t_params *par);
+void ft_cd(t_params *par, int output);
+void ft_exit();
+void ft_export(t_params *par, int foutput);
+void allocate_array(t_params *par, int nb_pipes);
 #endif

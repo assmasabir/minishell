@@ -210,6 +210,6 @@ void ft_cd(t_params *par, int output)
     else
     {
         write(1, "error\n", 6);
-        //error no sush file or directory
+        //!error no sush file or directory
     }
 }

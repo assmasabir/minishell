@@ -28,7 +28,7 @@ int is_cmd_present(char **paths, char *cmd, char **path_variable)
             *path_variable = cmd;
         else
         {
-            free(free_matrix);
+            // free());
             return(-1);
         }
     }
@@ -64,7 +64,10 @@ int search_cmd(char *cmd, char **path_variable)
 
     full_path = find_path();
     if(full_path == NULL)
-        handle_error(); //! bash: cmd: No such file or directory
+    {
+        write(1, "error\n", 6);
+    // handle_error(); //! bash: cmd: No such file or directory
+    }
     else
     {
         paths = ft_split(full_path, ':');
@@ -80,15 +83,26 @@ int search_cmd(char *cmd, char **path_variable)
 
 void child_process(t_params* par, int infile, int outfile, char *path_variable)
 {
-    int i;
     int id;
 
     id = fork();
     if(id == -1)
-        handle_error(); //!free if you have sth to
+    {
+        write(1, "error\n", 6);
+        // handle_error(); //!free if you have sth to
+    }
     if(id == 0)
     {
-        
-        execve(par->cmd, path_variable, environ);
+        if(dup2(infile, STDERR_FILENO) == -1)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        if(dup2(outfile, STDOUT_FILENO) == -1)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        execve(path_variable, par->cmd, environ);
     }
 }

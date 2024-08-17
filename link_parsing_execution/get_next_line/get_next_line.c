@@ -6,7 +6,7 @@
 /*   By: elite <elite@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 19:01:05 by asabir            #+#    #+#             */
-/*   Updated: 2024/08/09 15:07:07 by elite            ###   ########.fr       */
+/*   Updated: 2024/08/17 15:19:25 by elite            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ char	*get_next_line(int fd)
 	reserve = read_and_join(fd, &reserve);
 	if (reserve == NULL)
 		return (NULL);
-	j = ft_strlen((const char *)reserve);
+	j = ft_strlen(reserve);
 	temp = allocate_and_copy(reserve, &j);
 	if (temp == NULL)
 		return (NULL);
