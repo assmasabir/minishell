@@ -7,13 +7,14 @@ int open_heredoc(t_files *file)
     char *str;
 
     file->name = ft_join(file->name, "\n");
-    fd = open("heredoc", O_CREAT | O_TRUNC | O_RDWR, 644);
+    fd = open("heredoc", O_CREAT | O_TRUNC | O_RDWR, 0644);
     while(1)
     {
         str = get_next_line(STDIN_FILENO);
         if(ft_strcmp(str, file->name) == 0 || str == NULL)
         {
             free(str);
+            free(file->name);
             return(fd);
         }
         ft_putstr(str, fd);
@@ -30,7 +31,7 @@ int parse_files(t_params *par, int *outfile, int *infile)
         {
             if(*infile != 0)
                 close(*infile);
-            *infile = open(par->files->name, O_RDONLY, 744);
+            *infile = open(par->files->name, O_RDONLY, 0744);
             if(*infile == -1 )
             {
                 while(par->files)
@@ -56,13 +57,14 @@ int parse_files(t_params *par, int *outfile, int *infile)
         {
             if(*outfile != 1)
                 close(*outfile);
-            *outfile = open(par->files->name, O_CREAT | O_RDWR | O_TRUNC, 744);
+            printf("Imhere\n");
+            *outfile = open(par->files->name, O_CREAT | O_RDWR | O_TRUNC, 0744);
         }
         else if(par->files->type == 4)//output append
         {
             if(*outfile != 1)
                 close(*outfile);
-            *outfile = open(par->files->name, O_CREAT | O_RDWR | O_APPEND, 744);
+            *outfile = open(par->files->name, O_CREAT | O_RDWR | O_APPEND, 0744);
         }
         par->files = par->files->next;
     }
@@ -73,7 +75,7 @@ void case_first(t_params *par, int i, int infile, int outfile)
 {
     char *path_variable;
     int cmd_type;
-
+    printf("i am here\n");
     cmd_type = cmdType(par);
     if(search_cmd(par->cmd[0], &path_variable) == -1 && cmd_type == 0)
     {
@@ -167,6 +169,8 @@ void case_last(t_params *par, int i,int infile, int outfile)
 void open_pipes(t_params *par, int nb_pipes)
 {
     int i;
+    
+    i = 0;
     while(i != nb_pipes)
     {
         if(pipe(par->fd[i]) == -1)
@@ -182,10 +186,13 @@ void close_all(t_params *par)
     int i;
 
     i = 0;
+    if(par->nb_nodes == 1)
+        return;
     while(par->fd[i])
     {
         close(par->fd[i][0]);
         close(par->fd[i][1]);
+        i++;
     }
 }
 
@@ -195,8 +202,11 @@ void manage_files(t_params *par)
     int outfile;
     int infile;
     int nb_pipes;
+    t_params* temp;
 
+    temp = par;
     par->nb_nodes = list_size(par);
+    printf("%d\n", par->nb_nodes);
     nb_pipes = par->nb_nodes -1;
     allocate_array(par, nb_pipes);
     open_pipes(par, nb_pipes);
@@ -211,18 +221,18 @@ void manage_files(t_params *par)
         }
         else
         {
-            if(i < nb_pipes)
-            {
+            // if(i < nb_pipes)
+            // {
                 if(i == 0)
                     case_first(par, i, infile, outfile);
                 if(i != nb_pipes - 1 && nb_pipes != 0)
                     case_middle(par, i, infile, outfile);
                 if(i == nb_pipes - 1 && nb_pipes != 0)
                     case_last(par, i, infile, outfile);
-            }
+            // }
         }
         par= par->next;
         i++;
     }
-    close_all(par);
+    close_all(temp);
 }

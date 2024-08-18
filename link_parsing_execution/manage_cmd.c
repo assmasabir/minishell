@@ -1,4 +1,4 @@
-#include "/home/elite/Desktop/miinishell/minishell.h"
+#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 int cmdType(t_params *par)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elite <elite@student.42.fr>                +#+  +:+       +#+        */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 19:01:05 by asabir            #+#    #+#             */
-/*   Updated: 2024/08/17 15:19:25 by elite            ###   ########.fr       */
+/*   Updated: 2023/12/31 21:15:39 by asabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/home/elite/Desktop/miinishell/minishell.h"
+#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 char	*read_and_join_helper(char **reserve)
 {
@@ -53,7 +53,7 @@ char	*read_and_join(int fd, char **reserve)
 		}
 		buff[res] = '\0';
 		*reserve = free_and_join(reserve, buff);
-		if (ft_strchr(buff, '\n') != 0)
+		if (ft_strchrr(buff, '\n') != 0)
 			break ;
 	}
 	free(buff);

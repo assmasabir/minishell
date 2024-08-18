@@ -93,4 +93,8 @@ void ft_cd(t_params *par, int output);
 void ft_exit();
 void ft_export(t_params *par, int foutput);
 void allocate_array(t_params *par, int nb_pipes);
+int parse_files(t_params *par, int *outfile, int *infile);
+char	*ft_strchrr(char *s, int c);
+int		ft_strncmpp(char *s1, char *s2, unsigned int n);
+void manage_files(t_params *par);
 #endif
