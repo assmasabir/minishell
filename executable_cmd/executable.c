@@ -11,7 +11,6 @@ char *find_path()
             return (environ[i]+5);
         i++;
     }
-    printf("i am here\n");
     return(NULL);
 }
 
@@ -39,11 +38,10 @@ int is_cmd_present(char **paths, char *cmd, char **path_variable)
         {
             temp = ft_join(paths[i], "/");
             join = ft_join(temp, cmd);
-            printf("%s\n", join);
             if(access(join, X_OK) == 0)
             {
-                *path_variable = paths[i];
-                free(join);
+                *path_variable = join;
+                // free(join);
                 free(temp);
                 // free_matrix(paths);
                 return(0);
@@ -74,20 +72,15 @@ int search_cmd(char *cmd, char **path_variable)
     else
     {
         paths = ft_split(full_path, ':');
-        printf("full path %s \n", full_path);
         int b;
         b = 0;
         while(paths[b])
         {
-            printf("%s\n", paths[b]);
             b++;
         }
         check = is_cmd_present(paths, cmd, path_variable);
-        printf("check : %d\n", check);
-        printf("path_variable in search cmd %s\n", *path_variable);
         if(check == -1)
         {
-            printf("i am here lalala \n");
             perror(NULL); //! Command 'cmd' not found
             return(-1);
         }
@@ -99,7 +92,6 @@ int search_cmd(char *cmd, char **path_variable)
 
 void child_process(t_params* par, int infile, int outfile, char *path_variable)
 {
-    printf("waaak waaaaak1 : ");
     int id;
 
     id = fork();
@@ -122,5 +114,6 @@ void child_process(t_params* par, int infile, int outfile, char *path_variable)
             exit(-1);
         }
         execve(path_variable, par->cmd, environ);
+        printf("error in execve\n");
     }
 }

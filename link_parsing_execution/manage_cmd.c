@@ -1,8 +1,7 @@
-#include "/Users/asabir/minishell/minishell.h"
+#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
 int cmdType(t_params *par)
 {
-    printf("par->cmd %s\n", par->cmd[0]);
     if(ft_strcmp(par->cmd[0], "echo") == 0)
         return(1);
     else if(ft_strcmp(par->cmd[0], "cd") == 0)

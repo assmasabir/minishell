@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-CFLAGS += -fsanitize=address -g3
+# CFLAGS += -fsanitize=address -g3
 
 SRC = \
     built_in_cmd/export/export_0.c \
