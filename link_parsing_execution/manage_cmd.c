@@ -1,7 +1,8 @@
-#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+#include "/Users/asabir/minishell/minishell.h"
 
 int cmdType(t_params *par)
 {
+    printf("par->cmd %s\n", par->cmd[0]);
     if(ft_strcmp(par->cmd[0], "echo") == 0)
         return(1);
     else if(ft_strcmp(par->cmd[0], "cd") == 0)
@@ -39,15 +40,16 @@ void redirect_cmd(t_params *par, int type, int outfile)
     return;
 }
 
-void allocate_array(t_params *par, int nb_pipes)
+void allocate_array(t_pipe_track *p, int nb_pipes)
 {
     int i;
 
     i = 0;
-    par->fd = malloc(sizeof(int*)*(nb_pipes+1));
-    while(i <= nb_pipes)
+    p->fd = malloc(sizeof(int*)*(nb_pipes));
+    while(i < nb_pipes)
     {
-        par->fd[i]= malloc(sizeof(int)*2);
+        p->fd[i]= malloc(sizeof(int)*2);
         i++;
     }
+    // printf("par-fd   :  %p\n", par->fd[0]);
 }

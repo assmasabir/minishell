@@ -19,17 +19,21 @@ int ft_strncmp(char *str1, char *str2, int n)
     int i;
 
     i = 0;
-    while(str1[i] && str2[i] && i < n)
+    while(i < n && str1[i] && str2[i])
     {
         if(str1[i]==str2[i])
+        {
             i++;
+            if(i == n)
+                return(0);
+        }
         else
             break;
     }
     return(str1[i]- str2[i]);
 }
 
-int count_paths(char *str)
+int count_paths(char *str, char c)
 {
     int i;
     int count;
@@ -38,7 +42,7 @@ int count_paths(char *str)
     count = 1;
     while(str[i])
     {
-        if(str[i] == ':')
+        if(str[i] == c)
             count++;
         i++;
     }
@@ -55,7 +59,7 @@ char **ft_split(char *str, char c)
 
     i = 0;
     size = 0;
-    nb_paths = count_paths(str);
+    nb_paths = count_paths(str, c);
     to_return = malloc(sizeof(char*)*(nb_paths+1));
     while(i < nb_paths)
     {
@@ -66,12 +70,11 @@ char **ft_split(char *str, char c)
         to_return[i] = malloc((size + 1));
         while(n < size)
         {
-            to_return[i][n] = *str;
-            n++;
+            to_return[i][n++] = *str;
             str++;
         }
-        to_return[i][n] = '\0';
-        i++;
+        str++;
+        to_return[i++][n] = '\0';
     }
     to_return[i] = NULL;
     return(to_return);

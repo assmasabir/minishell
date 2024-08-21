@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+#include "/Users/asabir/minishell/minishell.h"
 
 char	*read_and_join_helper(char **reserve)
 {

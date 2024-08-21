@@ -23,28 +23,21 @@ typedef struct Files
 typedef struct Params
 {
     char **cmd;
-    char *args;
     char **env;
     t_files *files;
     int nb_nodes;
-    int **fd;
-    int fd_pos;
     char **myenv;
     struct Params *next;
     
 } t_params;
 
-typedef struct Exprot
-{
-    char *key;
-    char *value;
-    struct Export *next;
-} t_export;
 
-typedef struct Cd
+typedef struct Pipe_track
 {
-    char **cmd;
-} t_cd;
+    int **fd;
+    int i;
+} t_pipe_track;
+
 
 int list_size(t_params *param);
 int ft_strcmp(char *str1, char *str2);
@@ -92,7 +85,7 @@ void ft_unset(t_params *par);
 void ft_cd(t_params *par, int output);
 void ft_exit();
 void ft_export(t_params *par, int foutput);
-void allocate_array(t_params *par, int nb_pipes);
+void allocate_array(t_pipe_track *p, int nb_pipes);
 int parse_files(t_params *par, int *outfile, int *infile);
 char	*ft_strchrr(char *s, int c);
 int		ft_strncmpp(char *s1, char *s2, unsigned int n);
