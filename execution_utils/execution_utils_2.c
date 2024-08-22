@@ -14,19 +14,6 @@ int ft_strchr(char *str, char c)
     return(-1);
 }
 
-void free_matrix(char **str)
-{
-    int i;
-
-    i = 0;
-    while(str[i])
-    {
-        free(str[i]);
-        i++;
-    }
-    free(str);
-}
-
 char *ft_strncpy(char *str1, char *str2, int n)
 {
     int i;

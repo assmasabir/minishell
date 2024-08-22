@@ -155,33 +155,3 @@ void ft_exit()
 {
 
 }
-
-// int main()
-// {
-//     t_params  *par;
-
-//     int i;
-//     i = 0;
-//     par = malloc(sizeof(t_params));
-//     par->cmd = malloc(4 * sizeof(char *));
-//     if (par->cmd == NULL) {
-//         return 1;
-//     }
-//     par->cmd[0] = ft_strdup("unset");
-//     par->cmd[1] = ft_strdup("SHLVL");
-//     par->cmd[2] = ft_strdup("LESS");
-//     par->cmd[3] = NULL;
-//     ft_unset(par);
-//     while(environ[i])
-//     {
-//         printf("%s\n", environ[i]);
-//         i++;
-//     }
-//     i = 0;
-//     while(par->cmd[i])
-//     {
-//         free(par->cmd[i]);
-//         i++;
-//     }
-//     free(par);
-// }

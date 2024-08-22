@@ -36,9 +36,9 @@ int main()
     // tpar->files->next->next->next->next = malloc(sizeof(t_files));
     // tpar->files->next->next->next->next->name = "test5";
     // tpar->files->next->next->next->next->type = 3;
-    // tpar->files->next->next->next->next->next = NULL;
+    // tpar->files->next->next->next->next->next = NULL; 
     tpar->next->next->next = NULL;
-    manage_files(tpar);
+    execution(tpar);
 
     // free(tpar->files);
     // printf("%d\n", tpar->files->type);

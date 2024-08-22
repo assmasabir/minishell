@@ -89,5 +89,8 @@ void allocate_array(t_pipe_track *p, int nb_pipes);
 int parse_files(t_params *par, int *outfile, int *infile);
 char	*ft_strchrr(char *s, int c);
 int		ft_strncmpp(char *s1, char *s2, unsigned int n);
-void manage_files(t_params *par);
+void execution(t_params *par);
+
+//handle_errors
+free_array(t_pipe_track *p, int nb_pipes);
 #endif

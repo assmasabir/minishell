@@ -50,5 +50,4 @@ void allocate_array(t_pipe_track *p, int nb_pipes)
         p->fd[i]= malloc(sizeof(int)*2);
         i++;
     }
-    // printf("par-fd   :  %p\n", par->fd[0]);
 }

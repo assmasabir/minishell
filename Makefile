@@ -15,9 +15,10 @@ SRC = \
 	execution_utils/execution_utils_1.c \
 	execution_utils/execution_utils_2.c \
 	link_parsing_execution/manage_cmd.c \
-	link_parsing_execution/manage_files.c \
+	link_parsing_execution/execution.c \
     link_parsing_execution/get_next_line/get_next_line.c \
     link_parsing_execution/get_next_line/get_next_line_utils.c \
+	link_parsing_execution/manage_pipes.c \
 	main.c
 
 OBJS = $(SRC:.c=.o)
