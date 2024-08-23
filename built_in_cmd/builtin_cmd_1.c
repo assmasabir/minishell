@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-
 void alter_var(char *new_var, int i)
 {
     environ[i] = ft_strdup(new_var);

@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-# CFLAGS += -fsanitize=address -g3
+CFLAGS += -fsanitize=address -g3
 
 SRC = \
     built_in_cmd/export/export_0.c \
@@ -15,10 +15,13 @@ SRC = \
 	execution_utils/execution_utils_1.c \
 	execution_utils/execution_utils_2.c \
 	link_parsing_execution/manage_cmd.c \
-	link_parsing_execution/execution.c \
+	link_parsing_execution/manage_files_0.c \
+	link_parsing_execution/manage_files_1.c \
     link_parsing_execution/get_next_line/get_next_line.c \
     link_parsing_execution/get_next_line/get_next_line_utils.c \
-	link_parsing_execution/manage_pipes.c \
+	link_parsing_execution/manage_pipes_0.c	\
+	link_parsing_execution/manage_pipes_1.c	\
+	handle_errors_and_free/file_1.c			\
 	main.c
 
 OBJS = $(SRC:.c=.o)

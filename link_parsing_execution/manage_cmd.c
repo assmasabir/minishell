@@ -39,13 +39,13 @@ void redirect_cmd(t_params *par, int type, int outfile)
     return;
 }
 
-void allocate_array(t_pipe_track *p, int nb_pipes)
+void allocate_array(t_pipe_track *p)
 {
     int i;
 
     i = 0;
-    p->fd = malloc(sizeof(int*)*(nb_pipes));
-    while(i < nb_pipes)
+    p->fd = malloc(sizeof(int*)*(p->nb_pipes));
+    while(i < p->nb_pipes)
     {
         p->fd[i]= malloc(sizeof(int)*2);
         i++;

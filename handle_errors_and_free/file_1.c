@@ -1,11 +1,11 @@
 #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
 
-free_array(t_pipe_track *p, int nb_pipes)
+void free_array(t_pipe_track *p)
 {
     int i;
 
     i = 0;
-    while(i < nb_pipes)
+    while(i < p->nb_pipes)
     {
         free(p->fd[i]);
         i++;
@@ -24,6 +24,12 @@ void free_matrix(char **str)
         i++;
     }
     free(str);
+}
+
+void free_all(t_pipe_track * p_track)
+{
+    free_array(p_track);
+    free(p_track);
 }
 
 // void free_nodes(void *pt)

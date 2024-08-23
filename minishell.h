@@ -25,7 +25,6 @@ typedef struct Params
     char **cmd;
     char **env;
     t_files *files;
-    int nb_nodes;
     char **myenv;
     struct Params *next;
     
@@ -36,6 +35,9 @@ typedef struct Pipe_track
 {
     int **fd;
     int i;
+    int nb_pipes;
+    int cmd_type;
+    char *path_variable;
 } t_pipe_track;
 
 
@@ -85,12 +87,20 @@ void ft_unset(t_params *par);
 void ft_cd(t_params *par, int output);
 void ft_exit();
 void ft_export(t_params *par, int foutput);
-void allocate_array(t_pipe_track *p, int nb_pipes);
+void allocate_array(t_pipe_track *p);
 int parse_files(t_params *par, int *outfile, int *infile);
 char	*ft_strchrr(char *s, int c);
 int		ft_strncmpp(char *s1, char *s2, unsigned int n);
 void execution(t_params *par);
-
+void free_all(t_pipe_track * p_track);
 //handle_errors
-free_array(t_pipe_track *p, int nb_pipes);
+void free_array(t_pipe_track *p);
+int open_heredoc(t_files *file);
+void close_all(t_pipe_track *p);
+void open_pipes(t_pipe_track *p);
+void case_failed_parsing_files(t_pipe_track *p_track, t_params **par);
+void case_middle_built_in(t_params *par, int infile, int outfile, t_pipe_track *p_track);
+void case_middle_executable(t_params *par, int infile, int outfile, t_pipe_track *p_track, char *path_variable);
+void case_middle(t_params *par, t_pipe_track *p_track, int infile, int outfile);
+void case_last(t_params *par, t_pipe_track *p_track, int infile, int outfile);
 #endif
