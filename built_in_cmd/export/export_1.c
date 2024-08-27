@@ -69,23 +69,18 @@ void change_or_append_var_value(char *new_var, int check)
         append_value(new_var, i);
     free(key_var);
 }
+// char * handle_variable(t_params* par, int output)
+// {
 
-char **handle_variables(t_params *par, int output)
+// }
+
+int create_new_environ(t_params *par, int size)
 {
-    char **copy;
-    int size;
     int i;
     int nb;
-    int check;
-    int count_added;
-    int j;
-    int duplicated_keys;
-    
+    char **copy;
     i = 0;
-    duplicated_keys = 0;
-    count_added = 0;
-    size = size_env(environ);
-    nb = count_variables(par, size);
+    nb = count_new_variables(par, size);
     copy = create_copy(environ, &size);
     environ = malloc(sizeof(char *)*(nb+size+1));
     while(copy[i])
@@ -93,18 +88,36 @@ char **handle_variables(t_params *par, int output)
         environ[i]=copy[i];
         i++;
     }
+    free(copy);
+    return(i);
+}
+
+char **handle_variables(t_params *par, int output)
+{
+
+    int initial_size;
+    int index_of_next_var;
+    int check;
+    int count_added;
+    int j;
+    int duplicated_keys;
+    
+    index_of_next_var = 0;
+    duplicated_keys = 0;
+    count_added = 0;
+    initial_size = size_env(environ);
+    index_of_next_var = create_new_environ(par, initial_size);
     j = 1;
     
-    free(copy);
     while(par->cmd[j])
     {
         if(check_if_valid(par->cmd[j]) == 0)//valid
         {
-            check = check_if_add_change_append(par, par->cmd[j], i+1, &duplicated_keys);
+            check = check_if_add_change_append(par, par->cmd[j], index_of_next_var+1, &duplicated_keys);
             printf("i am check%d\n", check);
             if(check == 0)//add
             {
-                add_var_if_not_exist(par->cmd[j], size, count_added, check);
+                add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
                 count_added++;
             }
             else if(check == 1)//change
@@ -117,7 +130,7 @@ char **handle_variables(t_params *par, int output)
             }
             else if(check == 3)
             {
-                add_var_if_not_exist(par->cmd[j], size, count_added, check);
+                add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
                 count_added++;
             }
         }
@@ -125,7 +138,7 @@ char **handle_variables(t_params *par, int output)
         {
             write(output, "error\n", 6);
             // err_check = 1;
-            i--;
+            index_of_next_var--;
         }
         // else if(check_if_valid(par->cmd[i]) == -2)//$
         //     i++;
@@ -133,10 +146,10 @@ char **handle_variables(t_params *par, int output)
             exit(127);
         // free_and_exit_without_printing_error();
         if(par->cmd[j][0] != '$')
-            i++;
+            index_of_next_var++;
         j++;
     }
-    i = i - duplicated_keys - 1;
-    environ[i] = NULL;
+    index_of_next_var = index_of_next_var - duplicated_keys - 1;
+    environ[index_of_next_var] = NULL;
     return(environ); 
 }

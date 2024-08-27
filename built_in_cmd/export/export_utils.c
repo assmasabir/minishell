@@ -31,7 +31,7 @@ int check_if_var_reapeated(t_params *par, char *new_var)
     return(0);
 }
 
-int count_variables(t_params *par,int size)
+int count_new_variables(t_params *par,int size)
 {
     int i;
     int nb;

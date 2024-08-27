@@ -59,7 +59,7 @@ int check_if_add_change_append(t_params *par,char *new_var, int max, int *count)
 int check_if_valid(char *new_var);
 char **handle_variables(t_params *par, int output);
 char *return_key(char* str);
-int count_variables(t_params *par, int size);
+int count_new_variables(t_params *par, int size);
 char *to_append(char *str);
 char **create_copy(char **str, int *size);
 int size_env(char **env);
