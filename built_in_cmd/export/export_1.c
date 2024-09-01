@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/minishell/minishell.h"
 
 char *add_non_existing_append_var(char *new_var)
 {
@@ -21,16 +21,16 @@ char *add_non_existing_append_var(char *new_var)
     return(str);
 }
 
-void change_value(char *new_var, int i)
+void change_value(char *new_var, int i) 
 {
-    if(ft_strchr(new_var, '=') == -1)
+    if(ft_strchr(new_var, '=') == -1)//!prkkk
     {
         free(environ[i]);
         environ[i] = ft_strdup(new_var);
     }
     else
     {
-        // free(environ[i]);
+        free(environ[i]);
         environ[i] = ft_strdup(new_var);
     }
 }
@@ -81,6 +81,7 @@ int create_new_environ(t_params *par, int size)
     char **copy;
     i = 0;
     nb = count_new_variables(par, size);
+    printf("new variables : %d\n", nb);
     copy = create_copy(environ, &size);
     environ = malloc(sizeof(char *)*(nb+size+1));
     while(copy[i])
@@ -92,9 +93,8 @@ int create_new_environ(t_params *par, int size)
     return(i);
 }
 
-char **handle_variables(t_params *par, int output)
+char **handle_variables(t_params *par)
 {
-
     int initial_size;
     int index_of_next_var;
     int check;
@@ -111,14 +111,16 @@ char **handle_variables(t_params *par, int output)
     
     while(par->cmd[j])
     {
+        printf("i am index : %d\n", index_of_next_var);
         if(check_if_valid(par->cmd[j]) == 0)//valid
         {
-            check = check_if_add_change_append(par, par->cmd[j], index_of_next_var+1, &duplicated_keys);
+            check = check_if_add_change_append(par, par->cmd[j], index_of_next_var, &duplicated_keys);
             printf("i am check%d\n", check);
             if(check == 0)//add
             {
                 add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
                 count_added++;
+                index_of_next_var++;
             }
             else if(check == 1)//change
             {
@@ -132,24 +134,25 @@ char **handle_variables(t_params *par, int output)
             {
                 add_var_if_not_exist(par->cmd[j], initial_size, count_added, check);
                 count_added++;
+                index_of_next_var++;
             }
         }
-        else if(check_if_valid(par->cmd[j]) == -1)//other like * or = ...
+        else if(check_if_valid(par->cmd[j]) == -1)//other like * or = pr $ ...
         {
-            write(output, "error\n", 6);
+            printf("bash: export: '%s': not a valid identifier", par->cmd[j]);
             // err_check = 1;
-            index_of_next_var--;
         }
-        // else if(check_if_valid(par->cmd[i]) == -2)//$
-        //     i++;
         else if(check_if_valid(par->cmd[j]) == -3)//#
-            exit(127);
-        // free_and_exit_without_printing_error();
-        if(par->cmd[j][0] != '$')
-            index_of_next_var++;
+        {
+            free_matrix(par->cmd);
+            free(par);
+            exit(0);
+            //!remember to free all
+        }
         j++;
     }
-    index_of_next_var = index_of_next_var - duplicated_keys - 1;
+    // printf("I AM DUPLICATED %d\n", duplicated_keys);
+    // index_of_next_var = index_of_next_var - duplicated_keys - 1;
     environ[index_of_next_var] = NULL;
     return(environ); 
 }

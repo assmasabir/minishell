@@ -1,4 +1,4 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/minishell/minishell.h"
 
     // si empieza con # no importa lo que viene a continuacion lista los variables
     // si # viene al principio de una variable al centro, guarda los de antes y sale
@@ -10,7 +10,7 @@ void ft_export(t_params *par, int foutput)
     char **export;
 
     i = 0;
-    if(par->cmd[1] == NULL || par->cmd[1][0] == '#' || (par->cmd[1][0] == '$' && par->cmd[2]==NULL))
+    if(par->cmd[1] == NULL || par->cmd[1][0] == '#')
     {
         export = sort_env(par, environ);
         while(export[i])
@@ -21,8 +21,8 @@ void ft_export(t_params *par, int foutput)
         }
         free_matrix(export);
     }
-    if(par->cmd[1] && par->cmd[1][0] != '#' && (par->cmd[1][0] != '$' || par->cmd[2] !=NULL))
-       environ = handle_variables(par, foutput);
+    else
+       environ = handle_variables(par);
 }
 
 char **create_copy(char **str, int *size)

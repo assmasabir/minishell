@@ -57,7 +57,7 @@ void free_matrix(char **str);
 int check_if_append(char *new_var);
 int check_if_add_change_append(t_params *par,char *new_var, int max, int *count);
 int check_if_valid(char *new_var);
-char **handle_variables(t_params *par, int output);
+char **handle_variables(t_params *par);
 char *return_key(char* str);
 int count_new_variables(t_params *par, int size);
 char *to_append(char *str);

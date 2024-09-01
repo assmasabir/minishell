@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
+/*   By: elite <elite@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 19:01:05 by asabir            #+#    #+#             */
-/*   Updated: 2023/12/31 21:15:39 by asabir           ###   ########.fr       */
+/*   Updated: 2024/08/29 17:05:01 by elite            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+#include "/home/elite/Desktop/minishell/minishell.h"
 
 char	*read_and_join_helper(char **reserve)
 {

@@ -1,35 +1,6 @@
- #include "/nfs/homes/asabir/Desktop/minishell/minishell.h"
+ #include "/home/elite/Desktop/minishell/minishell.h"
 
-int check_if_var_reapeated(t_params *par, char *new_var)
-{
-    int i;
-    char *key_cmd;
-    char *key_new_var;
 
-    i = 1;
-    key_new_var = return_key(new_var);
-    while(par->cmd[i])
-    {
-        key_cmd = return_key(par->cmd[i]);
-        if(ft_strcmp(par->cmd[i], new_var) == 0)
-            i++;
-        if(par->cmd[i] && ft_strcmp(key_cmd, key_new_var) == 0)
-        {
-            free(key_cmd);
-            free(key_new_var);
-            return(1);
-        }
-        if(!par->cmd[i])
-        {
-            free(key_cmd);
-            break;  
-        }
-        i++;
-        free(key_cmd);
-    }
-    free(key_new_var);
-    return(0);
-}
 
 int count_new_variables(t_params *par,int size)
 {
@@ -43,14 +14,19 @@ int count_new_variables(t_params *par,int size)
     count = 0;
     while(par->cmd[i])
     {
-        check = check_if_add_change_append(par, par->cmd[i], size, &count);
-        if( check == 0 || check == 3)
-        {
-            nb++;
+        if(check_if_valid(par->cmd[i]) == 0)
+        {    
+            check = check_if_add_change_append(par, par->cmd[i], size, &count);
+            if( check == 0  || check == 3)
+            {
+                printf("i am var %s\n", par->cmd[i]);
+                nb++;
+            }
         }
         i++;
     }
-    return(nb);
+    printf("i am count: %d\n", count);
+    return(nb-(count/2));
 }
 
 int size_env(char **env)
