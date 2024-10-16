@@ -1,105 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_utils_1.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/20 22:17:09 by asabir            #+#    #+#             */
+/*   Updated: 2024/09/26 10:20:01 by asabir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int list_size(t_params *param)
+void	ft_putstr_exp(char *str, int fd)
 {
-    int i;
+	int	i;
+	int	check;
 
-    i = 0;
-
-    while(param)
-    {
-        i++;
-        param  = param->next;
-    }
-    return (i);
+	i = 0;
+	check = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+		{
+			write(fd, &str[i], 1);
+			check = 1;
+			write(fd, "\"", 1);
+			i++;
+		}
+		if (str[i])
+			write(fd, &str[i], 1);
+		else
+			break ;
+		i++;
+	}
+	if (check == 1)
+		write(fd, "\"", 1);
 }
 
-int ft_strncmp(char *str1, char *str2, int n)
+int	ft_strlen(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(i < n && str1[i] && str2[i])
-    {
-        if(str1[i]==str2[i])
-        {
-            i++;
-            if(i == n)
-                return(0);
-        }
-        else
-            break;
-    }
-    return(str1[i]- str2[i]);
+	i = 0;
+	while (str[i])
+	{
+		i++;
+	}
+	return (i);
 }
 
-int count_paths(char *str, char c)
+char	*ft_strdup(char *str)
 {
-    int i;
-    int count;
+	char	*cp;
+	int		i;
 
-    i = 0;
-    count = 1;
-    while(str[i])
-    {
-        if(str[i] == c)
-            count++;
-        i++;
-    }
-    return (count);
+	i = 0;
+	if (str == NULL)
+		return (NULL);
+	cp = safe_malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[i])
+	{
+		cp[i] = str[i];
+		i++;
+	}
+	cp[i] = '\0';
+	return (cp);
 }
 
-char **ft_split(char *str, char c)
+int	ft_strchr(char *str, char c)
 {
-    int i;
-    int size;
-    char **to_return;
-    int nb_paths;
-    int n;
+	int	i;
 
-    i = 0;
-    size = 0;
-    nb_paths = count_paths(str, c);
-    to_return = malloc(sizeof(char*)*(nb_paths+1));
-    while(i < nb_paths)
-    {
-        size = 0;
-        n = 0;
-        while(str[size] != c && str[size])
-            size++;
-        to_return[i] = malloc((size + 1));
-        while(n < size)
-        {
-            to_return[i][n++] = *str;
-            str++;
-        }
-        str++;
-        to_return[i++][n] = '\0';
-    }
-    to_return[i] = NULL;
-    return(to_return);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (0);
+		i++;
+	}
+	return (-1);
 }
 
-char *ft_join(char *str1, char *str2)
+char	*ft_strncpy(char *str1, char *str2, int n)
 {
-    int i;
-    int j;
-    char *to_join;
+	int	i;
 
-    i = 0;
-    j = 0;
-    to_join = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
-    while(str1[i])
-    {
-        to_join[i] = str1[i];
-        i++;
-    }
-    while(str2[j])
-    {
-        to_join[i] = str2[j];
-        i++;
-        j++;
-    }
-    to_join[i] = '\0';
-    return(to_join);
+	i = 0;
+	while (str1[i] && i < n)
+	{
+		str2[i] = str1[i];
+		i++;
+	}
+	str2[i] = '\0';
+	return (str2);
 }

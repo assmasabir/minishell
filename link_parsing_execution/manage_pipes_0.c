@@ -1,84 +1,108 @@
-#include "/home/elite/Desktop/minishell/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manage_pipes_0.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/17 13:35:23 by asabir            #+#    #+#             */
+/*   Updated: 2024/10/08 20:45:51 by asabir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void case_first_builtin(t_params *par, int outfile, t_pipe_track *p_track)
+#include "../minishell.h"
+
+void	execute_pipes(t_line_splited **head, t_cmd_track *c_track)
 {
-    if(outfile == 1 && p_track->nb_pipes != 0)
-        redirect_cmd(par, p_track->cmd_type, p_track->fd[p_track->i][1]);
-    else if(outfile == 1 && p_track->nb_pipes == 0)
-        redirect_cmd(par, p_track->cmd_type, 1);
-    else
-        redirect_cmd(par, p_track->cmd_type, outfile);
+	if (c_track->i == 0)
+		first_case(head, c_track);
+	if (head && c_track->i != c_track->nb_pipes - 1 && c_track->nb_pipes != 0
+		&& !c_track->leave)
+		middle_case(head, c_track);
+	if (head && c_track->i == c_track->nb_pipes - 1 && c_track->nb_pipes != 0
+		&& !c_track->leave)
+		last_case(head, c_track);
 }
 
-void case_first_executable(t_params *par, int infile, int outfile, t_pipe_track *p_track, char *path_variable)
+void	first_case(t_line_splited **head, t_cmd_track *c_track)
 {
-    if(outfile == 1 && p_track->nb_pipes != 0)
-        child_process(par, infile , p_track->fd[p_track->i][1], path_variable);
-    else if(outfile == 1 && p_track->nb_pipes == 0)
-        child_process(par, infile , 1, path_variable);
-    else
-        child_process(par, infile, outfile, path_variable);
+	int	infile;
+	int	outfile;
+	int	pid;
+
+	infile = 0;
+	outfile = 1;
+	if (parse_files_of_a_single_node(*head, c_track, &infile, &outfile) != -1)
+	{
+		if ((*head)->cmd[0])
+		{
+			c_track->cmd_type = determine_type(*head);
+			if (outfile == 1 && c_track->nb_pipes != 0)
+				pid = redirect_cmd((*head), infile, c_track->fd[c_track->i][1],
+						c_track);
+			else if (outfile == 1 && c_track->nb_pipes == 0)
+				pid = redirect_cmd((*head), infile, 1, c_track);
+			else
+				pid = redirect_cmd((*head), infile, outfile, c_track);
+			if (!c_track->nb_pipes)
+				set_exit_status(c_track, pid);
+		}
+	}
+	close_files_after_use(infile, outfile, c_track, 0);
+	(*head) = (*head)->next;
 }
 
-void case_first(t_params *par, t_pipe_track *p_track, int infile, int outfile)
+void	middle_case(t_line_splited **head, t_cmd_track *c_track)
 {
-    char *path_variable;
+	int	infile;
+	int	outfile;
 
-    path_variable = NULL;
-    p_track->cmd_type = cmdType(par);
-    if(p_track->cmd_type == 0)
-    {
-        if(search_cmd(par->cmd[0], &path_variable) == -1)
-            return;
-        case_first_executable(par, infile, outfile, p_track, path_variable);
-    }
-    else
-        case_first_builtin(par, outfile, p_track);
-
+	infile = 0;
+	outfile = 1;
+	if (parse_files_of_a_single_node((*head), c_track, &infile, &outfile) != -1)
+	{
+		if ((*head)->cmd[0])
+		{
+			c_track->cmd_type = determine_type((*head));
+			if (infile == 0 && outfile == 1)
+				(void)redirect_cmd(*head, c_track->fd[c_track->i][0],
+					c_track->fd[c_track->i + 1][1], c_track);
+			else if (infile != 0 && outfile == 1)
+				(void)redirect_cmd(*head, infile, c_track->fd[c_track->i
+					+ 1][1], c_track);
+			else if (infile == 0 && outfile != 1)
+				(void)redirect_cmd(*head, c_track->fd[c_track->i][0], outfile,
+					c_track);
+			else
+				(void)redirect_cmd(*head, infile, outfile, c_track);
+		}
+	}
+	close_files_after_use(infile, outfile, c_track, 1);
+	*head = (*head)->next;
 }
 
-void loop_over_nodes(t_pipe_track* p_track, t_params **par, int infile, int outfile)
+void	last_case(t_line_splited **head, t_cmd_track *c_track)
 {
-    if(parse_files(*par, &outfile, &infile) == -1)
-        case_failed_parsing_files(p_track, par);
-    else
-    {
-        if(p_track->i == 0)
-        {
-            case_first(*par, p_track, infile, outfile);
-            *par= (*par)->next;
-        }
-        if(p_track->i != p_track->nb_pipes - 1 && p_track->nb_pipes != 0 && par)
-        {
-            case_middle(*par, p_track, infile, outfile);
-            *par= (*par)->next;
-        }
-        if(p_track->i == p_track->nb_pipes - 1 && p_track->nb_pipes != 0 && par)
-        {
-            case_last(*par, p_track, infile, outfile);
-            *par= (*par)->next;
-        }
-    }
-}
+	int	infile;
+	int	outfile;
+	int	pid;
 
-void execution(t_params *par)
-{
-    int outfile;
-    int infile;
-    t_pipe_track *p_track;
-
-    p_track = malloc(sizeof(t_pipe_track));
-    p_track->nb_pipes = list_size(par) - 1;
-    allocate_array(p_track);
-    open_pipes(p_track);
-    p_track->i = 0;
-    while(par)
-    {
-        outfile = 1;
-        infile = 0;
-        loop_over_nodes(p_track, &par, infile, outfile);
-        p_track->i++;
-    }
-    close_all(p_track);
-    free_all(p_track);
+	infile = 0;
+	outfile = 1;
+	if (parse_files_of_a_single_node(*head, c_track, &infile, &outfile) != -1)
+	{
+		if ((*head)->cmd[0])
+		{
+			c_track->cmd_type = determine_type(*head);
+			if (infile == 0)
+				pid = redirect_cmd(*head, c_track->fd[c_track->i][0], outfile,
+						c_track);
+			else
+				pid = redirect_cmd(*head, infile, outfile, c_track);
+			set_exit_status(c_track, pid);
+		}
+	}
+	close_files_after_use(infile, outfile, c_track, 0);
+	close(c_track->fd[c_track->i][0]);
+	*head = (*head)->next;
 }

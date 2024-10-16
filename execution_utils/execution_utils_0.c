@@ -1,85 +1,70 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_utils_0.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asabir <asabir@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/29 09:55:39 by asabir            #+#    #+#             */
+/*   Updated: 2024/09/29 10:44:29 by asabir           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void ft_putstr(char *str, int fd)
+int	list_size(t_line_splited *head)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(str[i])
-    {
-        write(fd, &str[i], 1);
-        i++;
-    }
-}
-void ft_putstr_exp(char *str, int fd)
-{
-    int i;
-    int check;
-
-    i = 0;
-    check = 0;
-    while(str[i])
-    {
-        if(str[i] == '=')
-        {
-            write(fd, &str[i], 1);
-            check = 1;
-            write(fd, "\"", 1);
-            i++;
-        }
-        if(str[i])
-            write(fd, &str[i], 1);
-        else
-            break;
-        i++;
-    }
-    if(check ==1)
-        write(fd, "\"", 1);
+	i = 0;
+	while (head)
+	{
+		i++;
+		head = head->next;
+	}
+	return (i);
 }
 
-int ft_strcmp(char *str1, char *str2)
+void	allocate_array(t_cmd_track *c_track)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if(!str1)
-        return(-1);
-    while(str1[i] && str2[i])
-    {
-        if(str1[i]==str2[i])
-            i++;
-        else
-            break;
-    }
-    return(str1[i]- str2[i]);
+	i = 0;
+	c_track->fd = safe_malloc(sizeof(int *) * (c_track->nb_pipes));
+	while (i < c_track->nb_pipes)
+	{
+		c_track->fd[i] = safe_malloc(sizeof(int) * 2);
+		i++;
+	}
 }
 
-int ft_strlen(char *str)
+void	ft_putstr_fd(char *str, int fd)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while(str[i])
-    {
-        i++;
-    }
-    return(i);
+	i = 0;
+	if (!str)
+		return ;
+	while (str[i])
+	{
+		write(fd, &str[i], 1);
+		i++;
+	}
 }
 
-char *ft_strdup(char *str)
+int	ft_strcmp(char *str1, char *str2)
 {
-    char *cp;
-    int i;
-    
-    i = 0;
+	int	i;
 
-    cp = malloc(sizeof(char)*(ft_strlen(str)+1));
-    while(str[i])
-    {
-        cp[i]=str[i];
-        i++;
-    }
-    cp[i] = '\0';
-    return(cp);
+	i = 0;
+	if (!str1)
+		return (-1);
+	while (str1[i] && str2[i])
+	{
+		if (str1[i] == str2[i])
+			i++;
+		else
+			break ;
+	}
+	return (str1[i] - str2[i]);
 }
-
