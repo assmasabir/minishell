@@ -7,7 +7,7 @@ Minishell is a custom shell implementation designed to replicate the core functi
 - Execute commands from the command line
 - Handle multiple pipes (`|`)
 - Manage child processes with proper use of `fork()`, `execve()`, `waitpid()` and `wait()`
-- Implement built-in shell commands : `cd`, `exit`, `echo`,`unset` and `export`
+- Implement built-in shell commands : `cd`, `exit`, `echo`, `pwd`, `unset` and `export`
 - Environment variable management (`$VAR`, `env`)
 - Redirections (`<`, `>`, `>>`, `<<`): Support for input/output redirection.
 - Command History: Allow users to navigate through previously executed commands.
