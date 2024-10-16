@@ -53,7 +53,7 @@ To run the shell, simply execute the binary:
 ```
 You will now be able to run commands as you would in a normal shell. For example:
 ```bash
- ls -l | grep minishell | wc -l
+ ls -l | grep a | wc -l
 ```
 ```bash
 $ cd ..
